@@ -14,10 +14,7 @@ file(
 add_executable(
         tests
         validate_primality_tests.cpp
-        small_validator.hpp
-        big_validator.hpp
         test_utils.cpp
-        test_utils.h
 )
 target_link_libraries(tests big_prime_lib GTest::gtest_main)
 

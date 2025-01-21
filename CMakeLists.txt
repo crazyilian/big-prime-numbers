@@ -15,8 +15,6 @@ add_library(
         big_prime_lib
         src/primality_tests/primality_status.cpp
         src/primality_tests/trial_test.cpp
-        src/primality_tests/fermat_test.hpp
-        tests/validate_primality_tests.cpp
 )
 
 target_include_directories(big_prime_lib PUBLIC ${Boost_INCLUDE_DIRS})

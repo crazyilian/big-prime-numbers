@@ -5,8 +5,9 @@
 
 namespace BigPrimeLib {
 
+
 inline PrimalityStatus fermat_prime_test_base(const BigInt &n, const BigInt &base) {
-    if (powm(base, n - 1, n) == 1) {
+    if (boost::multiprecision::powm(base, n - 1, n) == 1) {
         return PrimalityStatus::Uncertain;
     } else {
         return PrimalityStatus::Composite;
