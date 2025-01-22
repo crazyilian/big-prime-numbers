@@ -1,8 +1,6 @@
 #include <iostream>
 #include <primality_tests/miller_rabin_prime_test.hpp>
 
-#include "primality_tests/fermat_test.hpp"
-
 using BigPrimeLib::BigInt;
 using BigPrimeLib::PrimalityStatus;
 using BigPrimeLib::miller_rabin_prime_test;
