@@ -7,9 +7,11 @@
 
 namespace BigPrimeLib {
 
+static constexpr auto BIG_PRIMES_FILENAME = "random_big_primes.txt";
+
 template<class PrimalityTestFunction, class... PrimalityTestArgs>
 void validate_on_big_primes(const PrimalityTestFunction &prime_test, PrimalityTestArgs &&... args) {
-    std::vector<BigInt> big_primes = read_numbers("random_big_primes.txt");
+    std::vector<BigInt> big_primes = read_numbers(BIG_PRIMES_FILENAME);
 
     for (const BigInt &x : big_primes) {
         PrimalityStatus out = prime_test(x, std::forward<PrimalityTestArgs>(args)...);
