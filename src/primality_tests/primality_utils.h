@@ -1,5 +1,7 @@
 #pragma once
 
+#include "common.h"
+
 namespace BigPrimeLib {
 
 enum class PrimalityStatus {
@@ -10,5 +12,7 @@ enum class PrimalityStatus {
 };
 
 const char *to_string(PrimalityStatus s);
+
+PrimalityStatus test_leq_3(const BigInt &n);
 
 }

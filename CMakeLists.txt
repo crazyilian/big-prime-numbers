@@ -10,7 +10,7 @@ find_package(Boost REQUIRED)
 include_directories(src)
 add_library(
         big_prime_lib
-        src/primality_tests/primality_status.cpp
+        src/primality_tests/primality_utils.cpp
         src/primality_tests/trial_test.cpp
         src/except.cpp
 )

@@ -1,7 +1,8 @@
 #include <iostream>
 #include "primality_tests/miller_rabin_prime_test.hpp"
-#include "common.hpp"
+#include "common.h"
 #include "except.h"
+#include "random.hpp"
 
 using BigPrimeLib::BigInt;
 using BigPrimeLib::PrimalityStatus;

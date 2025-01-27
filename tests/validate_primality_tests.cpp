@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "common.hpp"
+#include "common.h"
 #include "small_validator.hpp"
 #include "big_validator.hpp"
 #include "primality_tests/trial_test.h"

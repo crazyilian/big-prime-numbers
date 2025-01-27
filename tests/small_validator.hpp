@@ -2,9 +2,9 @@
 
 #include <unordered_set>
 #include <gtest/gtest.h>
-#include "common.hpp"
+#include "common.h"
 #include "test_utils.h"
-#include "primality_tests/primality_status.h"
+#include "primality_tests/primality_utils.h"
 
 namespace BigPrimeLib {
 

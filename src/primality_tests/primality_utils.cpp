@@ -1,4 +1,4 @@
-#include "primality_status.h"
+#include "primality_utils.h"
 
 namespace BigPrimeLib {
 
@@ -10,6 +10,16 @@ const char *to_string(PrimalityStatus s) {
         case PrimalityStatus::NotApplicable: return "NotApplicable";
         default: return "[Unknown PrimalityStatus]";
     }
+}
+
+PrimalityStatus test_leq_3(const BigInt &n) {
+    if (n <= 1) {
+        return PrimalityStatus::NotApplicable;
+    }
+    if (n <= 3) {
+        return PrimalityStatus::Prime;
+    }
+    return PrimalityStatus::Uncertain;
 }
 
 }

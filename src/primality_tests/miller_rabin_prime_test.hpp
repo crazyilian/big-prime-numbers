@@ -1,7 +1,8 @@
 #pragma once
 
-#include "common.hpp"
-#include "primality_status.h"
+#include "common.h"
+#include "random.hpp"
+#include "primality_utils.h"
 
 namespace BigPrimeLib {
 
@@ -22,23 +23,29 @@ inline PrimalityStatus miller_rabin_prime_test_base(const BigInt &n, size_t s, c
     return PrimalityStatus::Composite;
 }
 
-template<class RandomGenerator = DefaultRandomGenerator>
-PrimalityStatus miller_rabin_prime_test(const BigInt &n, size_t times, Random<RandomGenerator> &rnd) {
-    if (n <= 1) {
-        return PrimalityStatus::NotApplicable;
-    }
-    if (n <= 3) {
-        return PrimalityStatus::Prime;
+template<class Iterator>
+PrimalityStatus miller_rabin_prime_test_iter(const BigInt &n, Iterator base_begin, Iterator base_end) {
+    if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {
+        return status;
     }
     size_t s = Math::lsb(n - 1);
     BigInt t = n >> s;
-    for (size_t i = 0; i < times; ++i) {
-        BigInt base = rnd.uniform(2, n - 2);
+    for (auto it = base_begin; it != base_end; ++it) {
+        BigInt base = *it;
         if (miller_rabin_prime_test_base(n, s, t, base) == PrimalityStatus::Composite) {
             return PrimalityStatus::Composite;
         }
     }
     return PrimalityStatus::Uncertain;
+}
+
+template<class RandomGenerator = DefaultRandomGenerator>
+PrimalityStatus miller_rabin_prime_test(const BigInt &n, size_t times, Random<RandomGenerator> &rnd) {
+    if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {
+        return status;
+    }
+    RandomSequence rndseq([&rnd, &n]() { return rnd.uniform(2, n - 2); }, times);
+    return miller_rabin_prime_test_iter(n, rndseq.begin(), rndseq.end());
 }
 
 }
