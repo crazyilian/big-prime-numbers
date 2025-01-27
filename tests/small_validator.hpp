@@ -8,7 +8,7 @@
 
 namespace BigPrimeLib {
 
-static constexpr auto SMALL_PRIMES_FILENAME = "first_10000_primes.txt";
+static constexpr auto SMALL_PRIMES_FILENAME = "data/first_10000_primes.txt";
 
 template<class PrimalityTestFunction, class... PrimalityTestArgs>
 void validate_on_small_primes(const std::unordered_set<BigInt> &skip, const PrimalityTestFunction &prime_test,

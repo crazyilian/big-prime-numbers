@@ -7,7 +7,7 @@
 
 namespace BigPrimeLib {
 
-static constexpr auto BIG_PRIMES_FILENAME = "random_big_primes.txt";
+static constexpr auto BIG_PRIMES_FILENAME = "data/random_big_primes.txt";
 
 template<class PrimalityTestFunction, class... PrimalityTestArgs>
 void validate_on_big_primes(const PrimalityTestFunction &prime_test, PrimalityTestArgs &&... args) {

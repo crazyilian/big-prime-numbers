@@ -5,10 +5,9 @@ include_directories(${GTEST_INCLUDE_DIRS})
 
 file(
         COPY
-            ${CMAKE_CURRENT_SOURCE_DIR}/first_10000_primes.txt
-            ${CMAKE_CURRENT_SOURCE_DIR}/random_big_primes.txt
+            data/
         DESTINATION
-            ${CMAKE_CURRENT_BINARY_DIR}
+            ${CMAKE_CURRENT_BINARY_DIR}/data
 )
 
 add_executable(

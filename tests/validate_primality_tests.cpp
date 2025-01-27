@@ -8,17 +8,21 @@
 
 namespace BigPrimeLib {
 
+static constexpr auto SMALL_CARMICHAEL_FILENAME = "data/carmichael_less_10000th_prime.txt";
+
+// trial_prime_test
+
 TEST(trial_prime_test, small_primes) {
     validate_on_small_primes({}, trial_prime_test);
 }
 
+// fermat_prime_test
+
 TEST(fermat_prime_test, small_primes) {
     Random rnd;
-
-    std::unordered_set<BigInt> carmichael = {
-        561, 1105, 1729, 2465, 2821, 6601, 8911, 10585, 15841, 29341, 41041, 46657, 52633, 62745, 63973, 75361, 101101
-    };
-    validate_on_small_primes(carmichael, fermat_prime_test<DefaultRandomGenerator>, 10, rnd);
+    auto carmichael = read_numbers(SMALL_CARMICHAEL_FILENAME);
+    std::unordered_set<BigInt> skip(carmichael.begin(), carmichael.end());
+    validate_on_small_primes(skip, fermat_prime_test<DefaultRandomGenerator>, 10, rnd);
 }
 
 TEST(fermat_prime_test, big_primes) {
@@ -30,6 +34,32 @@ TEST(fermat_prime_test, big_product_two_primes) {
     Random rnd;
     validate_on_big_product_two_primes(fermat_prime_test<DefaultRandomGenerator>, 10, rnd);
 }
+
+// fermat_prime_test_iter
+
+TEST(fermat_prime_test_iter, small_primes) {
+    std::vector<BigInt> bases(10);
+    std::iota(bases.begin(), bases.end(), 2);
+    auto carmichael = read_numbers(SMALL_CARMICHAEL_FILENAME);
+    std::unordered_set<BigInt> skip(carmichael.begin(), carmichael.end());
+    skip.insert(bases.begin(), bases.end());
+    validate_on_small_primes(skip, fermat_prime_test_iter<std::vector<BigInt>::iterator>, bases.begin(), bases.end());
+}
+
+TEST(fermat_prime_test_iter, big_primes) {
+    std::vector<BigInt> bases(10);
+    std::iota(bases.begin(), bases.end(), 2);
+    validate_on_big_primes(fermat_prime_test_iter<std::vector<BigInt>::iterator>, bases.begin(), bases.end());
+}
+
+TEST(fermat_prime_test_iter, big_product_two_primes) {
+    std::vector<BigInt> bases(10);
+    std::iota(bases.begin(), bases.end(), 2);
+    validate_on_big_product_two_primes(fermat_prime_test_iter<std::vector<BigInt>::iterator>, bases.begin(),
+                                       bases.end());
+}
+
+// miller_rabin_prime_test
 
 TEST(miller_rabin_prime_test, small_primes) {
     Random rnd;
@@ -44,6 +74,30 @@ TEST(miller_rabin_prime_test, big_primes) {
 TEST(miller_rabin_prime_test, big_product_two_primes) {
     Random rnd;
     validate_on_big_product_two_primes(miller_rabin_prime_test<DefaultRandomGenerator>, 10, rnd);
+}
+
+// miller_rabin_prime_test_iter
+
+TEST(miller_rabin_prime_test_iter, small_primes) {
+    std::vector<BigInt> bases(10);
+    std::iota(bases.begin(), bases.end(), 2);
+    std::unordered_set<BigInt> skip(bases.begin(), bases.end());
+    skip.insert(12);
+    validate_on_small_primes(skip, miller_rabin_prime_test_iter<std::vector<BigInt>::iterator>, bases.begin(),
+                             bases.end());
+}
+
+TEST(miller_rabin_prime_test_iter, big_primes) {
+    std::vector<BigInt> bases(10);
+    std::iota(bases.begin(), bases.end(), 2);
+    validate_on_big_primes(miller_rabin_prime_test_iter<std::vector<BigInt>::iterator>, bases.begin(), bases.end());
+}
+
+TEST(miller_rabin_prime_test_iter, big_product_two_primes) {
+    std::vector<BigInt> bases(10);
+    std::iota(bases.begin(), bases.end(), 2);
+    validate_on_big_product_two_primes(miller_rabin_prime_test_iter<std::vector<BigInt>::iterator>, bases.begin(),
+                                       bases.end());
 }
 
 }
