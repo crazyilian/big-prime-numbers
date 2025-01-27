@@ -1,6 +1,4 @@
 #include <gtest/gtest.h>
-#include <fstream>
-
 #include "common.hpp"
 #include "small_validator.hpp"
 #include "big_validator.hpp"
