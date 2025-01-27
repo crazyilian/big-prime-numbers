@@ -23,6 +23,5 @@ target_compile_options(big_prime_lib PRIVATE $<$<CONFIG:Release>:-O3>)
 target_include_directories(big_prime_lib PUBLIC ${Boost_INCLUDE_DIRS})
 target_link_libraries(big_prime_lib PRIVATE gmp)
 
-
 add_subdirectory(example)
 add_subdirectory(tests)

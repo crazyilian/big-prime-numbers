@@ -3,9 +3,7 @@
 #include "common.h"
 #include "primality_status.h"
 
-
 namespace BigPrimeLib {
-
 
 PrimalityStatus miller_rabin_prime_test_base(const BigInt &n, size_t s, const BigInt &t, const BigInt &base) {
     BigInt x = boost::multiprecision::powm(base, t, n);
@@ -43,6 +41,5 @@ PrimalityStatus miller_rabin_prime_test(const BigInt &n, size_t times, RandomGen
     }
     return PrimalityStatus::Uncertain;
 }
-
 
 }

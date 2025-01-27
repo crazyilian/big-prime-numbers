@@ -47,5 +47,4 @@ TEST(miller_rabin_prime_test, big_product_two_primes) {
     validate_on_big_product_two_primes(miller_rabin_prime_test<typeof(rng)>, 10, rng);
 }
 
-
 }

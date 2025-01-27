@@ -21,5 +21,4 @@ PrimalityStatus trial_prime_test(const BigInt &n) {
     return PrimalityStatus::Prime;
 }
 
-
 }

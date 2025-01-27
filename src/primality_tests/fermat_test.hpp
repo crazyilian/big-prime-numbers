@@ -5,7 +5,6 @@
 
 namespace BigPrimeLib {
 
-
 inline PrimalityStatus fermat_prime_test_base(const BigInt &n, const BigInt &base) {
     if (boost::multiprecision::powm(base, n - 1, n) == 1) {
         return PrimalityStatus::Uncertain;
@@ -31,6 +30,5 @@ PrimalityStatus fermat_prime_test(const BigInt &n, size_t times, RandomGenerator
     }
     return PrimalityStatus::Uncertain;
 }
-
 
 }

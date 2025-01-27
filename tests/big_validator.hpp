@@ -32,5 +32,4 @@ void validate_on_big_product_two_primes(const PrimalityTestFunction &prime_test,
     }
 }
 
-
 }

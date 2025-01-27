@@ -29,5 +29,4 @@ void validate_on_small_primes(const std::set<BigInt> &skip, const PrimalityTestF
     }
 }
 
-
 }
