@@ -1,12 +1,9 @@
 cmake_minimum_required(VERSION 3.29)
-project(big_prime_numbers)
+project(big_prime_lib)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Werror")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address,bounds,undefined")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(Boost REQUIRED)
 
@@ -17,8 +14,15 @@ add_library(
         src/primality_tests/trial_test.cpp
 )
 
+target_compile_options(big_prime_lib PRIVATE -Wall -Wextra -Wpedantic -Werror)
+target_compile_options(big_prime_lib PRIVATE $<$<CONFIG:Debug>:-fsanitize=address,bounds,undefined>)
+target_link_options(big_prime_lib PRIVATE $<$<CONFIG:Debug>:-fsanitize=address,bounds,undefined>)
+target_link_libraries(big_prime_lib PRIVATE $<$<CONFIG:Debug>:-fsanitize=address,bounds,undefined>)
+target_compile_options(big_prime_lib PRIVATE $<$<CONFIG:Release>:-O3>)
+
 target_include_directories(big_prime_lib PUBLIC ${Boost_INCLUDE_DIRS})
-target_link_libraries(big_prime_lib gmp)
+target_link_libraries(big_prime_lib PRIVATE gmp)
+
 
 add_subdirectory(example)
 add_subdirectory(tests)
