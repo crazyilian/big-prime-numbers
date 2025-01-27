@@ -5,6 +5,8 @@
 
 namespace BigPrimeLib {
 
+namespace Math = boost::multiprecision;
+
 using BigInt = boost::multiprecision::mpz_int;
 using DefaultRandomGenerator = boost::random::mt19937;
 

@@ -6,7 +6,7 @@
 namespace BigPrimeLib {
 
 inline PrimalityStatus miller_rabin_prime_test_base(const BigInt &n, size_t s, const BigInt &t, const BigInt &base) {
-    BigInt x = boost::multiprecision::powm(base, t, n);
+    BigInt x = Math::powm(base, t, n);
     if (x == 1 || x == n - 1) {
         return PrimalityStatus::Uncertain;
     }
@@ -30,7 +30,7 @@ PrimalityStatus miller_rabin_prime_test(const BigInt &n, size_t times, Random<Ra
     if (n <= 3) {
         return PrimalityStatus::Prime;
     }
-    size_t s = boost::multiprecision::lsb(n - 1);
+    size_t s = Math::lsb(n - 1);
     BigInt t = n >> s;
     for (size_t i = 0; i < times; ++i) {
         BigInt base = rnd.uniform(2, n - 2);

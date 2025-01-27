@@ -9,7 +9,7 @@ using BigPrimeLib::Random;
 
 int main() {
     Random rnd;
-    BigInt x = boost::multiprecision::pow(BigInt(10), 100) + 267;
+    BigInt x = BigPrimeLib::Math::pow(BigInt(10), 100) + 267;
 
     if (miller_rabin_prime_test(x, 20, rnd) == PrimalityStatus::Composite) {
         std::cout << "Composite";
