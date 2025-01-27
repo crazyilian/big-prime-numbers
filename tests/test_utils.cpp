@@ -1,12 +1,13 @@
 #include <fstream>
 #include "test_utils.h"
+#include "except.h"
 
 namespace BigPrimeLib {
 
 std::vector<BigInt> read_numbers(const char *path) {
     std::ifstream file(path);
     if (!file.is_open()) {
-        throw std::runtime_error("Can't open file.");
+        throw Except::CantOpenFileException(path);
     }
     std::vector<BigInt> primes;
     BigInt x;

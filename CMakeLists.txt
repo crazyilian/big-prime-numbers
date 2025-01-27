@@ -12,6 +12,7 @@ add_library(
         big_prime_lib
         src/primality_tests/primality_status.cpp
         src/primality_tests/trial_test.cpp
+        src/except.cpp
 )
 
 target_compile_options(big_prime_lib PRIVATE -Wall -Wextra -Wpedantic -Werror)
