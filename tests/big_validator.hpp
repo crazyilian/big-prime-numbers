@@ -22,7 +22,7 @@ void validate_on_big_primes(const PrimalityTestFunction &prime_test, PrimalityTe
 
 template<class PrimalityTestFunction, class... PrimalityTestArgs>
 void validate_on_big_product_two_primes(const PrimalityTestFunction &prime_test, PrimalityTestArgs &&... args) {
-    std::vector<BigInt> big_primes = read_numbers("random_big_primes.txt");
+    std::vector<BigInt> big_primes = read_numbers(BIG_PRIMES_FILENAME);
 
     for (size_t i = 0; i < big_primes.size(); ++i) {
         for (size_t j = i; j < big_primes.size(); ++j) {
