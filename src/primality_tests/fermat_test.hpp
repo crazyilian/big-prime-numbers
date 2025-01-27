@@ -1,6 +1,6 @@
 #pragma once
 
-#include "common.h"
+#include "common.hpp"
 #include "primality_status.h"
 
 namespace BigPrimeLib {
@@ -13,17 +13,16 @@ inline PrimalityStatus fermat_prime_test_base(const BigInt &n, const BigInt &bas
     }
 }
 
-template<class RandomGenerator>
-PrimalityStatus fermat_prime_test(const BigInt &n, size_t times, RandomGenerator &rng) {
+template<class RandomGenerator = DefaultRandomGenerator>
+PrimalityStatus fermat_prime_test(const BigInt &n, size_t times, Random<RandomGenerator> &rnd) {
     if (n <= 1) {
         return PrimalityStatus::NotApplicable;
     }
     if (n == 2) {
         return PrimalityStatus::Prime;
     }
-    UniformBigIntDistribution dist(2, n - 1);
     for (size_t i = 0; i < times; ++i) {
-        BigInt base = dist(rng);
+        BigInt base = rnd.uniform(2, n - 1);
         if (fermat_prime_test_base(n, base) == PrimalityStatus::Composite) {
             return PrimalityStatus::Composite;
         }

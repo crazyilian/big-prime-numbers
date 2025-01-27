@@ -1,7 +1,7 @@
 #pragma once
 
 #include <gtest/gtest.h>
-#include "common.h"
+#include "common.hpp"
 #include "test_utils.h"
 #include "primality_tests/primality_status.h"
 

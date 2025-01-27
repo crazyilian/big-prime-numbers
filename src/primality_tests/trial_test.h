@@ -1,6 +1,6 @@
 #pragma once
 
-#include "common.h"
+#include "common.hpp"
 #include "primality_status.h"
 
 namespace BigPrimeLib {
