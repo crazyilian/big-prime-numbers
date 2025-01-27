@@ -17,7 +17,7 @@ TEST(trial_prime_test, small_primes) {
 TEST(fermat_prime_test, small_primes) {
     Random rnd;
 
-    std::set<BigInt> carmichael = {
+    std::unordered_set<BigInt> carmichael = {
         561, 1105, 1729, 2465, 2821, 6601, 8911, 10585, 15841, 29341, 41041, 46657, 52633, 62745, 63973, 75361, 101101
     };
     validate_on_small_primes(carmichael, fermat_prime_test<DefaultRandomGenerator>, 10, rnd);
