@@ -13,8 +13,6 @@ class Random {
     using Uniform = boost::random::uniform_int_distribution<BigInt>;
 
 public:
-    using GeneratorType = Generator;
-
     explicit Random(unsigned seed = DEFAULT_SEED) : generator_(seed) {}
 
     BigInt uniform(BigInt a, BigInt b) {
