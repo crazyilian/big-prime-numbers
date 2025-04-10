@@ -15,9 +15,7 @@ namespace Except {
     void react() {
         try {
             throw;
-        } catch (CantOpenFileException &e) {
-            std::cerr << e.what() << std::endl;
-        } catch (OutOfRangeException &e) {
+        } catch (std::exception & &e) {
             std::cerr << e.what() << std::endl;
         } catch (...) {
             std::cerr << "Unknown error!" << std::endl;
