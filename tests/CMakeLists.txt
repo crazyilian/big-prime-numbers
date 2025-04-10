@@ -12,6 +12,7 @@ file(
 
 add_executable(
         tests
+        validate_random.cpp
         validate_primality_tests.cpp
         test_utils.cpp
 )
