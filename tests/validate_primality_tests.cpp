@@ -8,7 +8,7 @@
 
 namespace BigPrimeLib {
 
-static constexpr auto SMALL_CARMICHAEL_FILENAME = "data/carmichael_less_10000th_prime.txt";
+constexpr auto kSmallCarmichaelFilename = "data/carmichael_less_10000th_prime.txt";
 
 // trial_prime_test
 
@@ -20,7 +20,7 @@ TEST(trial_prime_test, small_primes) {
 
 TEST(fermat_prime_test, small_primes) {
     Random rnd;
-    auto carmichael = read_numbers(SMALL_CARMICHAEL_FILENAME);
+    auto carmichael = read_numbers(kSmallCarmichaelFilename);
     std::unordered_set<BigInt> skip(carmichael.begin(), carmichael.end());
     validate_on_small_primes(skip, fermat_prime_test<DefaultRandomGenerator>, 10, rnd);
 }
@@ -40,7 +40,7 @@ TEST(fermat_prime_test, big_product_two_primes) {
 TEST(fermat_prime_test_iter, small_primes) {
     std::vector<BigInt> bases(10);
     std::iota(bases.begin(), bases.end(), 2);
-    auto carmichael = read_numbers(SMALL_CARMICHAEL_FILENAME);
+    auto carmichael = read_numbers(kSmallCarmichaelFilename);
     std::unordered_set<BigInt> skip(carmichael.begin(), carmichael.end());
     skip.insert(bases.begin(), bases.end());
     validate_on_small_primes(skip, fermat_prime_test_iter<std::vector<BigInt>::iterator>, bases.begin(), bases.end());

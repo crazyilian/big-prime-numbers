@@ -13,7 +13,7 @@ class Random {
     using Uniform = boost::random::uniform_int_distribution<BigInt>;
 
 public:
-    explicit Random(unsigned seed = DEFAULT_SEED) : generator_(seed) {}
+    explicit Random(unsigned seed = kDefaultSeed) : generator_(seed) {}
 
     BigInt uniform(BigInt a, BigInt b) {
         Uniform dist(a, b);
@@ -22,7 +22,7 @@ public:
 
 private:
     Generator generator_;
-    static constexpr unsigned DEFAULT_SEED = 42;
+    static constexpr unsigned kDefaultSeed = 42;
 };
 
 template<class DistributionGenerator>
