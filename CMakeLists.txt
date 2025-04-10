@@ -15,11 +15,15 @@ add_library(
         src/except.cpp
 )
 
-target_compile_options(big_prime_lib PRIVATE -Wall -Wextra -Wpedantic -Werror)
-target_compile_options(big_prime_lib PRIVATE $<$<CONFIG:Debug>:-fsanitize=address,bounds,undefined>)
-target_link_options(big_prime_lib PRIVATE $<$<CONFIG:Debug>:-fsanitize=address,bounds,undefined>)
-target_link_libraries(big_prime_lib PRIVATE $<$<CONFIG:Debug>:-fsanitize=address,bounds,undefined>)
-target_compile_options(big_prime_lib PRIVATE $<$<CONFIG:Release>:-O3>)
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(big_prime_lib PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    target_compile_options(big_prime_lib PRIVATE $<$<CONFIG:Debug>:-fsanitize=address,bounds,undefined>)
+    target_link_options(big_prime_lib PRIVATE $<$<CONFIG:Debug>:-fsanitize=address,bounds,undefined>)
+    target_link_libraries(big_prime_lib PRIVATE $<$<CONFIG:Debug>:-fsanitize=address,bounds,undefined>)
+    target_compile_options(big_prime_lib PRIVATE $<$<CONFIG:Release>:-O3>)
+elseif (MSVC)
+    target_compile_options(big_prime_lib PRIVATE /W4)
+endif ()
 
 target_include_directories(big_prime_lib PUBLIC ${Boost_INCLUDE_DIRS})
 target_link_libraries(big_prime_lib PRIVATE gmp)
