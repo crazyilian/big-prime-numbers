@@ -2,7 +2,6 @@
 
 #include <boost/random.hpp>
 #include "common.h"
-#include "except.h"
 
 namespace BigPrimeLib {
 
@@ -13,7 +12,7 @@ class Random {
     using Uniform = boost::random::uniform_int_distribution<BigInt>;
 
 public:
-    explicit Random(unsigned seed = kDefaultSeed) : generator_(seed) {}
+    explicit Random(uint32_t seed = kDefaultSeed) : generator_(seed) {}
 
     BigInt uniform(BigInt a, BigInt b) {
         Uniform dist(a, b);
@@ -22,36 +21,32 @@ public:
 
 private:
     Generator generator_;
-    static constexpr unsigned kDefaultSeed = 42;
+    static constexpr uint32_t kDefaultSeed = 42;
 };
 
 template<class DistributionGenerator>
 class RandomSequence {
 public:
-    RandomSequence(const DistributionGenerator &random, size_t length)
+    RandomSequence(DistributionGenerator random, size_t length)
         : random_(random), length_(length) {}
 
     class Iterator {
     public:
-        Iterator(const DistributionGenerator &random, size_t remaining)
+        Iterator(DistributionGenerator random, size_t remaining)
             : random_(random), remaining_(remaining), current_(0) {
             if (remaining_ != 0) {
-                next();
+                generate_new_value();
             }
         }
 
-        BigInt operator*() const {
-            if (remaining_ == 0) {
-                throw Except::OutOfRangeException("RandomSequence iterator");
-            }
+        const BigInt &operator*() const {
+            assert(remaining_ != 0 && "RandomSequence iterator is out of range.");
             return current_;
         }
 
         Iterator &operator++() {
-            if (remaining_ == 0) {
-                throw Except::OutOfRangeException("RandomSequence iterator");
-            }
-            next();
+            assert(remaining_ != 0 && "RandomSequence iterator is out of range.");
+            generate_new_value();
             --remaining_;
             return *this;
         }
@@ -71,27 +66,27 @@ public:
         }
 
     private:
-        const DistributionGenerator &random_;
-        size_t remaining_;
-        BigInt current_;
-
-        void next() {
+        void generate_new_value() {
             current_ = random_();
         }
+
+    private:
+        DistributionGenerator random_;
+        size_t remaining_;
+        BigInt current_;
     };
 
-    Iterator begin() {
+    Iterator begin() const {
         return Iterator(random_, length_);
     }
 
-    Iterator end() {
+    Iterator end() const {
         return Iterator(random_, 0);
     }
 
 private:
-    const DistributionGenerator &random_;
+    DistributionGenerator random_;
     size_t length_;
 };
-
 
 }
