@@ -1,13 +1,13 @@
-#include "trial_test.h"
+#pragma once
+
+#include "common.h"
+#include "primality_utils.h"
 
 namespace BigPrimeLib {
 
-PrimalityStatus trial_prime_test(const BigInt &n) {
-    if (n <= 1) {
-        return PrimalityStatus::NotApplicable;
-    }
-    if (n <= 3) {
-        return PrimalityStatus::Prime;
+inline PrimalityStatus trial_prime_test(const BigInt &n) {
+    if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {
+        return status;
     }
     if (n % 2 == 0) {
         return PrimalityStatus::Composite;

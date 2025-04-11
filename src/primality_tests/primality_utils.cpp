@@ -22,4 +22,8 @@ PrimalityStatus test_leq_3(const BigInt &n) {
     return PrimalityStatus::Uncertain;
 }
 
+PrimalityStatus uncertain2prime(PrimalityStatus s) {
+    return s == PrimalityStatus::Uncertain ? PrimalityStatus::Prime : s;
+}
+
 }

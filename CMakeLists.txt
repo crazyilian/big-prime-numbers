@@ -8,11 +8,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(Boost REQUIRED)
 
 include_directories(src)
+file(GLOB src_targets src/**/*.cpp src/**/*.hpp src/*.cpp src/*.hpp)
 add_library(
         big_prime_lib
-        src/primality_tests/primality_utils.cpp
-        src/primality_tests/trial_test.cpp
-        src/except.cpp
+        ${src_targets}
 )
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")

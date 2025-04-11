@@ -28,8 +28,8 @@ PrimalityStatus fermat_prime_test_iter(const BigInt &n, Iterator base_begin, Ite
     return PrimalityStatus::Uncertain;
 }
 
-template<class RandomGenerator = DefaultRandomGenerator>
-PrimalityStatus fermat_prime_test(const BigInt &n, size_t times, Random<RandomGenerator> &rnd) {
+template<class RandomGenerator = DefaultRandomGenerator, class SeedType = DefaultRandomGenerator::result_type>
+PrimalityStatus fermat_prime_test(const BigInt &n, size_t times, Random<RandomGenerator, SeedType> &rnd) {
     if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {
         return status;
     }

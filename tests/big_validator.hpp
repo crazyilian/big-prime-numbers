@@ -7,11 +7,9 @@
 
 namespace BigPrimeLib {
 
-constexpr auto kBigPrimesFilename = "data/random_big_primes.txt";
-
 template<class PrimalityTestFunction, class... PrimalityTestArgs>
 void validate_on_big_primes(const PrimalityTestFunction &prime_test, PrimalityTestArgs &&... args) {
-    std::vector<BigInt> big_primes = read_numbers(kBigPrimesFilename);
+    std::vector<BigInt> big_primes = read_numbers(Filenames::BigPrimes);
 
     for (const BigInt &x : big_primes) {
         PrimalityStatus out = prime_test(x, std::forward<PrimalityTestArgs>(args)...);
@@ -22,7 +20,7 @@ void validate_on_big_primes(const PrimalityTestFunction &prime_test, PrimalityTe
 
 template<class PrimalityTestFunction, class... PrimalityTestArgs>
 void validate_on_big_product_two_primes(const PrimalityTestFunction &prime_test, PrimalityTestArgs &&... args) {
-    std::vector<BigInt> big_primes = read_numbers(kBigPrimesFilename);
+    std::vector<BigInt> big_primes = read_numbers(Filenames::BigPrimes);
 
     for (size_t i = 0; i < big_primes.size(); ++i) {
         for (size_t j = i; j < big_primes.size(); ++j) {

@@ -7,12 +7,12 @@ namespace BigPrimeLib {
 
 using DefaultRandomGenerator = boost::random::mt19937;
 
-template<class Generator = DefaultRandomGenerator>
+template<class Generator = DefaultRandomGenerator, class SeedType = DefaultRandomGenerator::result_type>
 class Random {
     using Uniform = boost::random::uniform_int_distribution<BigInt>;
 
 public:
-    explicit Random(uint32_t seed = kDefaultSeed) : generator_(seed) {}
+    explicit Random(SeedType seed = kDefaultSeed) : generator_(seed) {}
 
     BigInt uniform(BigInt a, BigInt b) {
         Uniform dist(a, b);
@@ -21,7 +21,7 @@ public:
 
 private:
     Generator generator_;
-    static constexpr uint32_t kDefaultSeed = 42;
+    static constexpr SeedType kDefaultSeed = 42;
 };
 
 template<class DistributionGenerator>
