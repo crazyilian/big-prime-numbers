@@ -18,7 +18,7 @@ PrimalityStatus lucas_lehmer_riesel_prime_test(const BigInt &k, const uint64_t &
         for (p = 3; jacobi(p - 2, N) != 1 || jacobi(p + 2, N) != -1; ++p) {}
     }
 
-    auto v = LucasState(k, p, 1, N).v;
+    auto v = LucasSequence(k, p, 1, N).v;
     for (size_t i = 1; i + 1 < n; ++i) {
         v = (v * v - 2) % N;
     }

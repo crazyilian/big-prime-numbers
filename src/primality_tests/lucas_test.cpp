@@ -8,7 +8,7 @@ namespace BigPrimeLib {
 
 PrimalityStatus lucas_test(const BigInt &n, const BigInt &p, const BigInt &q, int jacob) {
     assert(n > 0);
-    auto ls = LucasState(n - jacob, p, q, n);
+    auto ls = LucasSequence(n - jacob, p, q, n);
     if (ls.u % n == 0) {
         return PrimalityStatus::Uncertain;
     }
@@ -23,7 +23,7 @@ PrimalityStatus lucas_test(const BigInt &n, const BigInt &p, const BigInt &q) {
 
 PrimalityStatus strong_lucas_test(const BigInt &n, const BigInt &d, const size_t &s, const BigInt &p, const BigInt &q) {
     assert(n > 0);
-    auto ls = LucasState(d, p, q, n);
+    auto ls = LucasSequence(d, p, q, n);
     if (ls.u % n == 0 || (s != 0 && ls.v % n == 0)) {
         return PrimalityStatus::Uncertain;
     }
@@ -52,7 +52,7 @@ PrimalityStatus strong_lucas_test(const BigInt &n, const BigInt &p, const BigInt
 PrimalityStatus extra_strong_lucas_test(const BigInt &n, const BigInt &d, const size_t &s, const BigInt &p,
                                         const BigInt &q) {
     assert(n > 0);
-    auto ls = LucasState(d, p, q, n);
+    auto ls = LucasSequence(d, p, q, n);
     if ((ls.u % n == 0 && (ls.v % n == 2 || (ls.v + 2) % n == 0)) || (s != 0 && ls.v % n == 0)) {
         return PrimalityStatus::Uncertain;
     }

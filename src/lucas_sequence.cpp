@@ -21,8 +21,8 @@ namespace {
 
 }
 
-LucasState::LucasState(const BigInt &p, const BigInt &q, const BigInt &mod) : p(modpos(p, mod)), q(modpos(q, mod)),
-                                                                              mod(mod) {
+LucasSequence::LucasSequence(const BigInt &p, const BigInt &q,
+                             const BigInt &mod) : p(modpos(p, mod)), q(modpos(q, mod)), mod(mod) {
     assert(mod % 2 == 1);
     inv2_ = modinv2(mod);
     d_ = modpos(p * p - 4 * q, mod);
@@ -32,7 +32,7 @@ LucasState::LucasState(const BigInt &p, const BigInt &q, const BigInt &mod) : p(
     v = 2;
 }
 
-void LucasState::add1() {
+void LucasSequence::add1() {
     BigInt u_new = ((p * u + v) % mod * inv2_) % mod;
     BigInt v_new = ((d_ * u + p * v) % mod * inv2_) % mod;
     u = std::move(u_new);
@@ -41,14 +41,15 @@ void LucasState::add1() {
     k++;
 }
 
-void LucasState::mul2() {
+void LucasSequence::mul2() {
     u = u * v % mod;
     v = modpos(v * v - (2 * qpow_), mod);
     qpow_ = qpow_ * qpow_ % mod;
     k *= 2;
 }
 
-LucasState::LucasState(const BigInt &k, const BigInt &p, const BigInt &q, const BigInt &mod) : LucasState(p, q, mod) {
+LucasSequence::LucasSequence(const BigInt &k, const BigInt &p, const BigInt &q,
+                             const BigInt &mod) : LucasSequence(p, q, mod) {
     if (k == 0) {
         return;
     }
