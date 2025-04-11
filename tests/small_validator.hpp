@@ -21,7 +21,7 @@ void validate_on_small_primes(const std::unordered_set<BigInt> &skip, const Prim
         bool is_prime = small_primes_set.contains(x);
         PrimalityStatus out = prime_test(x, std::forward<PrimalityTestArgs>(args)...);
         if (is_prime) {
-            EXPECT_TRUE(out == PrimalityStatus::Prime || out == PrimalityStatus::Uncertain)
+            EXPECT_TRUE(uncertain2prime(out) == PrimalityStatus::Prime)
                     << "Prime " << x << " marked as " << to_string(out);
         } else {
             EXPECT_TRUE(out == PrimalityStatus::Composite)

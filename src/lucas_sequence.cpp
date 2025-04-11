@@ -21,64 +21,49 @@ namespace {
 
 }
 
-LucasPair lucas_sequence_p1(const BigInt &k, BigInt p, const BigInt &mod) {
+LucasState::LucasState(const BigInt &p, const BigInt &q, const BigInt &mod) : p(modpos(p, mod)), q(modpos(q, mod)),
+                                                                              mod(mod) {
     assert(mod % 2 == 1);
-    if (k == 0) {
-        return {0, 2};
-    }
-    p = modpos(p, mod);
-    if (k == 1) {
-        return {1, p};
-    }
-    BigInt u = 1;
-    BigInt v = p;
-    BigInt inv2 = modinv2(mod);
-    BigInt d = p * p - 4;
-    uint64_t i = Math::msb(k);
-    do {
-        --i;
-        u = u * v % mod;
-        v = modpos(v * v - 2, mod);
-        if (Math::bit_test(k, i)) {
-            BigInt u_new = ((p * u + v) % mod * inv2) % mod;
-            BigInt v_new = ((d * u + p * v) % mod * inv2) % mod;
-            u = std::move(u_new);
-            v = std::move(v_new);
-        }
-    } while (i > 0);
-    return {u, v};
+    inv2_ = modinv2(mod);
+    d_ = modpos(p * p - 4 * q, mod);
+    qpow_ = 1;
+    k = 0;
+    u = 0;
+    v = 2;
 }
 
-LucasPair lucas_sequence_pq(const BigInt &k, BigInt p, BigInt q, const BigInt &mod) {
-    assert(mod % 2 == 1);
+void LucasState::add1() {
+    BigInt u_new = ((p * u + v) % mod * inv2_) % mod;
+    BigInt v_new = ((d_ * u + p * v) % mod * inv2_) % mod;
+    u = std::move(u_new);
+    v = std::move(v_new);
+    qpow_ = qpow_ * q % mod;
+    k++;
+}
+
+void LucasState::mul2() {
+    u = u * v % mod;
+    v = modpos(v * v - (2 * qpow_), mod);
+    qpow_ = qpow_ * qpow_ % mod;
+    k *= 2;
+}
+
+LucasState::LucasState(const BigInt &k, const BigInt &p, const BigInt &q, const BigInt &mod) : LucasState(p, q, mod) {
     if (k == 0) {
-        return {0, 2};
+        return;
     }
-    p = modpos(p, mod);
-    q = modpos(q, mod);
+    add1();
     if (k == 1) {
-        return {1, p};
+        return;
     }
-    BigInt u = 1;
-    BigInt v = p;
-    BigInt qpow = q;
-    BigInt inv2 = modinv2(mod);
-    BigInt d = p * p - 4;
     uint64_t i = Math::msb(k);
     do {
         --i;
-        u = u * v % mod;
-        v = modpos(v * v - (2 * qpow), mod);
-        qpow = qpow * qpow % mod;
+        mul2();
         if (Math::bit_test(k, i)) {
-            BigInt u_new = ((p * u + v) % mod * inv2) % mod;
-            BigInt v_new = ((d * u + p * v) % mod * inv2) % mod;
-            u = std::move(u_new);
-            v = std::move(v_new);
-            qpow = qpow * q % mod;
+            add1();
         }
     } while (i > 0);
-    return {u, v};
 }
 
 }

@@ -4,12 +4,21 @@
 
 namespace BigPrimeLib {
 
-struct LucasPair {
+class LucasState {
+public:
     BigInt u, v;
+    BigInt p, q, mod;
+    BigInt k;
+
+public:
+    LucasState(const BigInt &p, const BigInt &q, const BigInt &mod);
+    LucasState(const BigInt &k, const BigInt &p, const BigInt &q, const BigInt &mod);
+
+    void add1();
+    void mul2();
+
+private:
+    BigInt d_, inv2_, qpow_;
 };
-
-LucasPair lucas_sequence_p1(const BigInt &k, BigInt p, const BigInt &mod);
-LucasPair lucas_sequence_pq(const BigInt &k, BigInt p, BigInt q, const BigInt &mod);
-
 
 }

@@ -1,12 +1,9 @@
-#pragma once
-
-#include "common.h"
-#include "primality_utils.h"
+#include "lucas_lehmer_test.h"
 
 namespace BigPrimeLib {
 
-inline PrimalityStatus lucas_lehmer_prime_test(const uint64_t &p) {
-    BigInt m = Math::pow(BigInt(2), p) - 1;
+PrimalityStatus lucas_lehmer_prime_test(const uint64_t &p) {
+    BigInt m = (BigInt(1) << p) - 1;
     if (auto status = test_leq_3(m); status != PrimalityStatus::Uncertain) {
         return status;
     }

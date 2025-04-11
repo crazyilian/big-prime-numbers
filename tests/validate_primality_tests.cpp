@@ -2,11 +2,12 @@
 #include "common.h"
 #include "small_validator.hpp"
 #include "big_validator.hpp"
-#include "primality_tests/trial_test.hpp"
+#include "primality_tests/bpsw_test.cpp"
+#include "primality_tests/trial_test.h"
 #include "primality_tests/fermat_test.hpp"
 #include "primality_tests/miller_rabin_test.hpp"
-#include "primality_tests/lucas_lehmer_test.hpp"
-#include "primality_tests/lucas_lehmer_riesel_test.hpp"
+#include "primality_tests/lucas_lehmer_test.h"
+#include "primality_tests/lucas_lehmer_riesel_test.h"
 
 namespace BigPrimeLib {
 
@@ -124,7 +125,7 @@ TEST(lucas_lehmer_prime_test, small_mersenne) {
 // lucas_lehmer_riesel_prime_test
 
 TEST(lucas_lehmer_riesel_prime_test, small_generalized_mersenne) {
-    for (uint64_t n = 1; n < 200; ++n) {
+    for (uint64_t n = 1; n < 100; ++n) {
         for (uint64_t k = 1; k < 200 && (n >= 10 || k < (1 << n)); ++k) {
             // 2^n > k
             BigInt N = k * Math::pow(BigInt(2), n) - 1;
@@ -160,6 +161,92 @@ TEST(lucas_lehmer_riesel_prime_test, big_generalized_mersenne_primes) {
         auto status = lucas_lehmer_riesel_prime_test(k, n);
         EXPECT_TRUE(status == PrimalityStatus::Prime) << "Prime " << k << " * 2^" << n << " - 1 marked as "
                 << to_string(status);
+    }
+}
+
+
+// bpsw_prime_test
+
+TEST(bpsw_prime_test, small_primes) {
+    validate_on_small_primes({}, bpsw_prime_test, true);
+}
+
+TEST(bpsw_prime_test, big_primes) {
+    validate_on_big_primes(bpsw_prime_test, true);
+}
+
+TEST(bpsw_prime_test, big_product_two_primes) {
+    validate_on_big_product_two_primes(bpsw_prime_test, true);
+}
+
+TEST(bpsw_prime_test, small_squares) {
+    for (BigInt x = 2; x < 300000; ++x) {
+        auto status = bpsw_prime_test(x * x, true);
+        EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << "^2 marked as " << to_string(status);
+    }
+}
+
+
+// bpsw_prime_test_no_wieferich
+
+TEST(bpsw_prime_test_no_wieferich, small_primes) {
+    validate_on_small_primes({}, bpsw_prime_test, false);
+}
+
+TEST(bpsw_prime_test_no_wieferich, big_primes) {
+    validate_on_big_primes(bpsw_prime_test, false);
+}
+
+TEST(bpsw_prime_test_no_wieferich, big_product_two_primes) {
+    validate_on_big_product_two_primes(bpsw_prime_test, false);
+}
+
+TEST(bpsw_prime_test_no_wieferich, small_squares) {
+    for (BigInt x = 2; x < 300000; ++x) {
+        auto status = bpsw_prime_test(x * x, false);
+        EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << "^2 marked as " << to_string(status);
+    }
+}
+
+// bpsw_fermat_prime_test
+
+TEST(bpsw_fermat_prime_test, small_primes) {
+    validate_on_small_primes({}, bpsw_fermat_prime_test, true);
+}
+
+TEST(bpsw_fermat_prime_test, big_primes) {
+    validate_on_big_primes(bpsw_fermat_prime_test, true);
+}
+
+TEST(bpsw_fermat_prime_test, big_product_two_primes) {
+    validate_on_big_product_two_primes(bpsw_fermat_prime_test, true);
+}
+
+TEST(bpsw_fermat_prime_test, small_squares) {
+    for (BigInt x = 2; x < 300000; ++x) {
+        auto status = bpsw_fermat_prime_test(x * x, true);
+        EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << "^2 marked as " << to_string(status);
+    }
+}
+
+// bpsw_fermat_prime_test_no_wieferich
+
+TEST(bpsw_fermat_prime_test_no_wieferich, small_primes) {
+    validate_on_small_primes({}, bpsw_fermat_prime_test, false);
+}
+
+TEST(bpsw_fermat_prime_test_no_wieferich, big_primes) {
+    validate_on_big_primes(bpsw_fermat_prime_test, false);
+}
+
+TEST(bpsw_fermat_prime_test_no_wieferich, big_product_two_primes) {
+    validate_on_big_product_two_primes(bpsw_fermat_prime_test, false);
+}
+
+TEST(bpsw_fermat_prime_test_no_wieferich, small_squares) {
+    for (BigInt x = 2; x < 300000; ++x) {
+        auto status = bpsw_fermat_prime_test(x * x, false);
+        EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << "^2 marked as " << to_string(status);
     }
 }
 

@@ -13,8 +13,7 @@ void validate_on_big_primes(const PrimalityTestFunction &prime_test, PrimalityTe
 
     for (const BigInt &x : big_primes) {
         PrimalityStatus out = prime_test(x, std::forward<PrimalityTestArgs>(args)...);
-        EXPECT_TRUE(out == PrimalityStatus::Prime || out == PrimalityStatus::Uncertain)
-                << "Prime " << x << " marked as " << to_string(out);
+        EXPECT_TRUE(uncertain2prime(out) == PrimalityStatus::Prime) << "Prime " << x << " marked as " << to_string(out);
     }
 }
 
