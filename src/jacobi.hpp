@@ -35,6 +35,11 @@ int jacobi(T a, T n) {
     return n == 1 ? res : 0;
 }
 
+inline int jacobi(const BigInt &a, const BigInt &n) {
+    assert(n > 0 && n % 2 == 1);
+    return mpz_jacobi(a.backend().data(), n.backend().data());
+}
+
 template<typename T1, typename T2>
 int jacobi(T1 a, const T2 &big_n) {
     assert(big_n > 0 && big_n % 2 == 1);
@@ -59,6 +64,5 @@ int jacobi(T1 a, const T2 &big_n) {
     }
     return res * jacobi(a, n);
 }
-
 
 }
