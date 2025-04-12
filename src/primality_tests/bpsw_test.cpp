@@ -15,7 +15,13 @@ namespace {
         }
 
         int64_t D = 5;
-        while (jacobi(D, n) != -1) {
+        while (true) {
+            int j = jacobi(D, n);
+            if (j == -1) {
+                break;
+            } else if (j == 0) {
+                return abs(D) == n ? PrimalityStatus::Prime : PrimalityStatus::Composite;
+            }
             if (D > 0) {
                 D = -D - 2;
             } else {
@@ -25,7 +31,14 @@ namespace {
                 return PrimalityStatus::Composite;
             }
         }
-        return strong_lucas_test<int64_t>(n, 1, (1 - D) / 4, -1);
+
+        int64_t p = 1;
+        int64_t q = (1 - D) / 4;
+        if (D == 5) {
+            p = q = 5;
+        }
+
+        return strong_lucas_test(n, p, q, -1);
     }
 
 }
