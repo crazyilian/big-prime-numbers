@@ -16,5 +16,6 @@ const char *to_string(PrimalityStatus s);
 PrimalityStatus test_leq_3(const BigInt &n);
 
 PrimalityStatus uncertain2prime(PrimalityStatus s);
+PrimalityStatus uncertain2composite(PrimalityStatus s);
 
 }

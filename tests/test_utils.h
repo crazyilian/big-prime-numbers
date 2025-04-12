@@ -12,6 +12,7 @@ namespace Filenames {
     inline constexpr auto SmallCarmichael = "data/carmichael_less_10000th_prime.txt";
     inline constexpr auto MersennePrimes = "data/mersenne_primes.txt";
     inline constexpr auto BigGeneralizedMersennePrimes = "data/random_big_generalized_mersenne_primes.txt";
+    inline constexpr auto BigProthPrimes = "data/random_big_proth_primes.txt";
 }
 
 }

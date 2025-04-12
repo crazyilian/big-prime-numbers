@@ -26,4 +26,8 @@ PrimalityStatus uncertain2prime(PrimalityStatus s) {
     return s == PrimalityStatus::Uncertain ? PrimalityStatus::Prime : s;
 }
 
+PrimalityStatus uncertain2composite(PrimalityStatus s) {
+    return s == PrimalityStatus::Uncertain ? PrimalityStatus::Composite : s;
+}
+
 }

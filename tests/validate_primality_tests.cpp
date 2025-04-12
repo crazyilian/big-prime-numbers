@@ -8,6 +8,7 @@
 #include "primality_tests/miller_rabin_test.hpp"
 #include "primality_tests/lucas_lehmer_test.h"
 #include "primality_tests/lucas_lehmer_riesel_test.h"
+#include "primality_tests/proth_test.hpp"
 
 namespace BigPrimeLib {
 
@@ -128,7 +129,7 @@ TEST(lucas_lehmer_riesel_prime_test, small_generalized_mersenne) {
     for (uint64_t n = 1; n < 100; ++n) {
         for (uint64_t k = 1; k < 200 && (n >= 10 || k < (1 << n)); ++k) {
             // 2^n > k
-            BigInt N = k * Math::pow(BigInt(2), n) - 1;
+            BigInt N = (k << n) - 1;
             auto status_lucas = lucas_lehmer_riesel_prime_test(k, n);
             Random rnd;
             auto status_miller = uncertain2prime(miller_rabin_prime_test(N, 20, rnd));
@@ -143,9 +144,9 @@ TEST(lucas_lehmer_riesel_prime_test, big_generalized_mersenne_random) {
     Random rnd(42);
     for (size_t i = 0; i < 10; ++i) {
         auto n = static_cast<uint64_t>(rnd.uniform(1, 5000));
-        auto k = rnd.uniform(1, Math::pow(BigInt(2), n) - 1);
+        auto k = rnd.uniform(1, (BigInt(1) << n) - 1);
 
-        BigInt N = k * Math::pow(BigInt(2), n) - 1;
+        BigInt N = (k << n) - 1;
         auto status_lucas = lucas_lehmer_riesel_prime_test(k, n);
         auto status_miller = uncertain2prime(miller_rabin_prime_test(N, 20, rnd));
         EXPECT_TRUE(status_lucas == status_miller) << to_string(status_miller) << ' ' << N << " marked as "
@@ -291,5 +292,54 @@ TEST(bpsw_fermat_prime_test_stronger_lucas, small_squares) {
         EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << "^2 marked as " << to_string(status);
     }
 }
+
+// proth_prime_test
+
+TEST(proth_prime_test, small_proth) {
+    for (uint64_t n = 1; n < 100; ++n) {
+        for (uint64_t k = 1; k < 200 && (n >= 10 || k < (1 << n)); ++k) {
+            // 2^n > k
+            BigInt N = (k << n) + 1;
+            Random rnd1(42);
+            auto status_proth = uncertain2composite(proth_prime_test(N, 20, rnd1));
+            Random rnd2(42);
+            auto status_miller = uncertain2prime(miller_rabin_prime_test(N, 20, rnd2));
+            EXPECT_TRUE(status_proth == status_miller) << to_string(status_miller) << ' ' << N << " marked as "
+                    << to_string(status_proth);
+
+        }
+    }
+}
+
+TEST(proth_prime_test, big_proth_random) {
+    Random rnd(42);
+    for (size_t i = 0; i < 10; ++i) {
+        auto n = static_cast<uint64_t>(rnd.uniform(1, 5000));
+        auto k = rnd.uniform(1, (BigInt(1) << n) - 1);
+
+        BigInt N = (k << n) + 1;
+        Random rnd1(42);
+        auto status_proth = uncertain2composite(proth_prime_test(N, 20, rnd1));
+        Random rnd2(42);
+        auto status_miller = uncertain2prime(miller_rabin_prime_test(N, 20, rnd2));
+        EXPECT_TRUE(status_proth == status_miller) << to_string(status_miller) << ' ' << N << " marked as "
+                << to_string(status_proth);
+    }
+}
+
+
+TEST(proth_prime_test, big_proth_primes) {
+    auto numbers = read_numbers(Filenames::BigGeneralizedMersennePrimes);
+    for (size_t i = 0; i < numbers.size(); i += 2) {
+        auto n = static_cast<uint64_t>(numbers[i]);
+        auto k = numbers[i + 1];
+        auto N = (k << n) + 1;
+        Random rnd(42);
+        auto status = uncertain2composite(proth_prime_test(N, 20, rnd));
+        EXPECT_TRUE(status == PrimalityStatus::Prime) << "Prime " << k << " * 2^" << n << " + 1 marked as "
+                << to_string(status);
+    }
+}
+
 
 }
