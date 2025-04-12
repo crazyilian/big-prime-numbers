@@ -57,7 +57,7 @@ PrimalityStatus strong_lucas_test(const BigInt &n, const T &p, const T &q, int j
 template<typename T>
 PrimalityStatus strong_lucas_test(const BigInt &n, const T &p, const T &q) {
     T D = p * p - 4 * q;
-    return strong_lucas_test(n, p, q, D, jacobi(D, n));
+    return strong_lucas_test(n, p, q, jacobi(D, n));
 }
 
 // extra_strong_lucas_test
@@ -122,7 +122,7 @@ PrimalityStatus stronger_lucas_test(const BigInt &n, const T &p, const T &q, int
 template<typename T>
 PrimalityStatus stronger_lucas_test(const BigInt &n, const T &p, const T &q) {
     T D = p * p - 4 * q;
-    return stronger_lucas_test(n, p, q, D, jacobi(D, n));
+    return stronger_lucas_test(n, p, q, jacobi(D, n));
 }
 
 
