@@ -8,7 +8,7 @@ class LucasSequence {
 public:
     BigInt u, v;
     BigInt p, q, mod;
-    BigInt k;
+    BigInt k, qpow;
 
 public:
     LucasSequence(const BigInt &p, const BigInt &q, const BigInt &mod);
@@ -18,7 +18,7 @@ public:
     void mul2();
 
 private:
-    BigInt d_, inv2_, qpow_;
+    BigInt d_, inv2_;
 };
 
 }

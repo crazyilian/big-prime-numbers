@@ -2,7 +2,7 @@
 #include "fermat_test.hpp"
 #include "miller_rabin_test.hpp"
 #include "jacobi.hpp"
-#include "lucas_test.h"
+#include "lucas_test.hpp"
 
 namespace BigPrimeLib {
 
@@ -25,8 +25,7 @@ namespace {
                 return PrimalityStatus::Composite;
             }
         }
-
-        return strong_lucas_test(n, 1, (1 - D) / 4, -1);
+        return strong_lucas_test<int64_t>(n, 1, (1 - D) / 4, -1);
     }
 
 }

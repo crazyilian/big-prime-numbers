@@ -26,7 +26,7 @@ LucasSequence::LucasSequence(const BigInt &p, const BigInt &q,
     assert(mod % 2 == 1);
     inv2_ = modinv2(mod);
     d_ = modpos(p * p - 4 * q, mod);
-    qpow_ = 1;
+    qpow = 1;
     k = 0;
     u = 0;
     v = 2;
@@ -37,14 +37,14 @@ void LucasSequence::add1() {
     BigInt v_new = ((d_ * u + p * v) % mod * inv2_) % mod;
     u = std::move(u_new);
     v = std::move(v_new);
-    qpow_ = qpow_ * q % mod;
+    qpow = qpow * q % mod;
     k++;
 }
 
 void LucasSequence::mul2() {
     u = u * v % mod;
-    v = modpos(v * v - (2 * qpow_), mod);
-    qpow_ = qpow_ * qpow_ % mod;
+    v = modpos(v * v - (2 * qpow), mod);
+    qpow = qpow * qpow % mod;
     k *= 2;
 }
 
