@@ -5,7 +5,10 @@
 
 namespace BigPrimeLib {
 
-inline PrimalityStatus bpsw_fermat_prime_test(const BigInt &n, bool known_wieferich = true);
-inline PrimalityStatus bpsw_prime_test(const BigInt &n, bool known_wieferich = true);
+inline PrimalityStatus bpsw_fermat_prime_test(const BigInt &n, bool known_wieferich = true,
+                                              bool stronger_lucas = false);
+
+inline PrimalityStatus bpsw_miller_prime_test(const BigInt &n, bool known_wieferich = true,
+                                              bool stronger_lucas = false);
 
 }

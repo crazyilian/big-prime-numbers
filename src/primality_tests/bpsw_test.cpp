@@ -8,7 +8,7 @@ namespace BigPrimeLib {
 
 namespace {
 
-    PrimalityStatus lucas_test_wrapper(const BigInt &n, bool known_wieferich) {
+    PrimalityStatus lucas_test_wrapper(const BigInt &n, bool known_wieferich, bool stronger_lucas) {
         if (known_wieferich && (n == 1194649 || n == 12327121)) {
             // OEIS: A001220
             return PrimalityStatus::Composite;
@@ -38,12 +38,16 @@ namespace {
             p = q = 5;
         }
 
-        return strong_lucas_test(n, p, q, -1);
+        if (!stronger_lucas) {
+            return strong_lucas_test(n, p, q, -1);
+        } else {
+            return stronger_lucas_test(n, p, q, -1);
+        }
     }
 
 }
 
-PrimalityStatus bpsw_fermat_prime_test(const BigInt &n, bool known_wieferich) {
+PrimalityStatus bpsw_fermat_prime_test(const BigInt &n, bool known_wieferich, bool stronger_lucas) {
     if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {
         return status;
     } else if (n % 2 == 0) {
@@ -52,10 +56,10 @@ PrimalityStatus bpsw_fermat_prime_test(const BigInt &n, bool known_wieferich) {
         return status;
     }
 
-    return lucas_test_wrapper(n, known_wieferich);
+    return lucas_test_wrapper(n, known_wieferich, stronger_lucas);
 }
 
-PrimalityStatus bpsw_prime_test(const BigInt &n, bool known_wieferich) {
+PrimalityStatus bpsw_miller_prime_test(const BigInt &n, bool known_wieferich, bool stronger_lucas) {
     if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {
         return status;
     } else if (n % 2 == 0) {
@@ -68,7 +72,7 @@ PrimalityStatus bpsw_prime_test(const BigInt &n, bool known_wieferich) {
         return status;
     }
 
-    return lucas_test_wrapper(n, known_wieferich);
+    return lucas_test_wrapper(n, known_wieferich, stronger_lucas);
 }
 
 }
