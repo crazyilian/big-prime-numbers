@@ -70,10 +70,10 @@ PrimalityStatus stronger_lucas_test(const BigInt &n, const BigInt &d, const size
         return PrimalityStatus::Composite;
     }
 
+    // strong Lucas test
     bool composite = true;
-
     auto ls = LucasSequence(d, p, q, n);
-    if (ls.u % n == 0 || (s != 0 && ls.v % n == 0)) {
+    if (ls.u % n == 0 || ls.v % n == 0) {
         composite = false;
     }
     for (size_t r = 1; r < s; ++r) {
