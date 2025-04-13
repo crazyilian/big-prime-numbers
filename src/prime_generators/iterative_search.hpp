@@ -47,4 +47,12 @@ BigInt search_next_prime(const BigInt &l, const PrimalityTestFunction &prime_tes
     return search_next_prime_in_range(l, l, r, prime_test, std::forward<PrimalityTestArgs>(args)...);
 }
 
+
+template<class RandomT = Random<>, class PrimalityTestFunction, class... PrimalityTestArgs>
+BigInt generate_random_prime_in_range(const BigInt &l, const BigInt &r, RandomT &rnd,
+                                      const PrimalityTestFunction &prime_test, PrimalityTestArgs &&... args) {
+    auto s = rnd.uniform(l, r);
+    return search_next_prime_in_range(s, l, r, prime_test, std::forward<PrimalityTestArgs>(args)...);
+}
+
 }
