@@ -27,10 +27,10 @@ TEST(search_next_prime, small_primes) {
 TEST(generate_random_prime_in_range, small_range) {
     Random rnd;
     auto small_primes = read_numbers(Filenames::SmallPrimes);
-    small_primes.resize(std::min(small_primes.size(), 1000ul));
+    small_primes.resize(std::min(small_primes.size(), 3000ul));
     for (const BigInt &p : small_primes) {
-        BigInt l = p - rnd.uniform(0, 500);
-        BigInt r = p + rnd.uniform(0, 500);
+        BigInt l = p - rnd.uniform(0, 100);
+        BigInt r = p + rnd.uniform(0, 100);
         auto y = generate_random_prime_in_range(l, r, rnd,
                                                 miller_rabin_prime_test_assume_prime<decltype(rnd)>, 10, rnd);
         EXPECT_TRUE(l <= y && y <= r) << y << " is not in range " << "[" << l << ", " << r << "]";
@@ -38,7 +38,6 @@ TEST(generate_random_prime_in_range, small_range) {
         EXPECT_TRUE(status == PrimalityStatus::Prime) << "Found not " << to_string(status) << " number " << y;
     }
 }
-
 
 TEST(generate_random_prime_in_range, big_range) {
     Random rnd;
