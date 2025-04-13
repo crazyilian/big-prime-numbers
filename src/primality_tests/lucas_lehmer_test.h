@@ -5,6 +5,6 @@
 
 namespace BigPrimeLib {
 
-PrimalityStatus lucas_lehmer_prime_test(const uint64_t &p);
+PrimalityStatus lucas_lehmer_prime_test(const BigInt &n);
 
 }

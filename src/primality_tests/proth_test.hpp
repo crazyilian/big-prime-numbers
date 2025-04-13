@@ -35,6 +35,8 @@ PrimalityStatus proth_prime_test_iter(const BigInt &n, Iterator base_begin, Iter
 
 template<class RandomGenerator = DefaultRandomGenerator, class SeedType = DefaultRandomGenerator::result_type>
 PrimalityStatus proth_prime_test(const BigInt &n, size_t times, Random<RandomGenerator, SeedType> &rnd) {
+    // n = k*2^s+1, k<2^s
+    assert(n > 2);
     if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {
         return status;
     }
