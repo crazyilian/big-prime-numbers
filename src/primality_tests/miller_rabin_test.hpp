@@ -39,13 +39,23 @@ PrimalityStatus miller_rabin_prime_test_iter(const BigInt &n, Iterator base_begi
     return PrimalityStatus::Uncertain;
 }
 
-template<class RandomGenerator = DefaultRandomGenerator, class SeedType = DefaultRandomGenerator::result_type>
-PrimalityStatus miller_rabin_prime_test(const BigInt &n, size_t times, Random<RandomGenerator, SeedType> &rnd) {
+template<class RandomT = Random<>>
+PrimalityStatus miller_rabin_prime_test(const BigInt &n, size_t times, RandomT &rnd) {
     if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {
         return status;
     }
     RandomSequence rndseq([&rnd, &n]() { return rnd.uniform(2, n - 2); }, times);
     return miller_rabin_prime_test_iter(n, rndseq.begin(), rndseq.end());
+}
+
+template<class Iterator>
+PrimalityStatus miller_rabin_prime_test_iter_assume_prime(const BigInt &n, Iterator base_begin, Iterator base_end) {
+    return uncertain2prime(miller_rabin_prime_test_iter(n, base_begin, base_end));
+}
+
+template<class RandomT = Random<>>
+PrimalityStatus miller_rabin_prime_test_assume_prime(const BigInt &n, size_t times, RandomT &rnd) {
+    return uncertain2prime(miller_rabin_prime_test(n, times, rnd));
 }
 
 }

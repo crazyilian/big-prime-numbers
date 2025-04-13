@@ -33,8 +33,8 @@ PrimalityStatus proth_prime_test_iter(const BigInt &n, Iterator base_begin, Iter
     return PrimalityStatus::Uncertain;
 }
 
-template<class RandomGenerator = DefaultRandomGenerator, class SeedType = DefaultRandomGenerator::result_type>
-PrimalityStatus proth_prime_test(const BigInt &n, size_t times, Random<RandomGenerator, SeedType> &rnd) {
+template<class RandomT = Random<>>
+PrimalityStatus proth_prime_test(const BigInt &n, size_t times, RandomT &rnd) {
     // n = k*2^s+1, k<2^s
     assert(n > 2);
     if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {
@@ -42,6 +42,16 @@ PrimalityStatus proth_prime_test(const BigInt &n, size_t times, Random<RandomGen
     }
     RandomSequence rndseq([&rnd, &n]() { return rnd.uniform(2, n - 1); }, times);
     return proth_prime_test_iter(n, rndseq.begin(), rndseq.end());
+}
+
+template<class Iterator>
+PrimalityStatus proth_prime_test_iter_assume_composite(const BigInt &n, Iterator base_begin, Iterator base_end) {
+    return uncertain2composite(proth_prime_test_iter(n, base_begin, base_end));
+}
+
+template<class RandomT = Random<>>
+PrimalityStatus proth_prime_test_assume_composite(const BigInt &n, size_t times, RandomT &rnd) {
+    return uncertain2composite(proth_prime_test(n, times, rnd));
 }
 
 }

@@ -75,4 +75,12 @@ PrimalityStatus bpsw_miller_prime_test(const BigInt &n, bool known_wieferich, bo
     return lucas_test_wrapper(n, known_wieferich, stronger_lucas);
 }
 
+PrimalityStatus bpsw_fermat_prime_test_assume_prime(const BigInt &n, bool known_wieferich, bool stronger_lucas) {
+    return uncertain2prime(bpsw_fermat_prime_test(n, known_wieferich, stronger_lucas));
+}
+
+PrimalityStatus bpsw_miller_prime_test_assume_prime(const BigInt &n, bool known_wieferich, bool stronger_lucas) {
+    return uncertain2prime(bpsw_miller_prime_test(n, known_wieferich, stronger_lucas));
+}
+
 }
