@@ -70,17 +70,17 @@ TEST(fermat_prime_test, small_primes) {
     Random rnd;
     auto carmichael = read_numbers(Filenames::SmallCarmichael);
     std::unordered_set<BigInt> skip(carmichael.begin(), carmichael.end());
-    validate_on_small_primes(skip, fermat_prime_test_assume_prime<decltype(rnd)>, 10, rnd);
+    validate_on_small_primes(skip, fermat_prime_test_assume_prime<>, 10, rnd);
 }
 
 TEST(fermat_prime_test, big_primes) {
     Random rnd;
-    validate_on_big_primes(fermat_prime_test_assume_prime<decltype(rnd)>, 10, rnd);
+    validate_on_big_primes(fermat_prime_test_assume_prime<>, 10, rnd);
 }
 
 TEST(fermat_prime_test, big_product_two_primes) {
     Random rnd;
-    validate_on_big_product_two_primes(fermat_prime_test_assume_prime<decltype(rnd)>, 10, rnd);
+    validate_on_big_product_two_primes(fermat_prime_test_assume_prime<>, 10, rnd);
 }
 
 // fermat_prime_test_iter
@@ -113,17 +113,17 @@ TEST(fermat_prime_test_iter, big_product_two_primes) {
 
 TEST(miller_rabin_prime_test, small_primes) {
     Random rnd;
-    validate_on_small_primes({}, miller_rabin_prime_test_assume_prime<decltype(rnd)>, 10, rnd);
+    validate_on_small_primes({}, miller_rabin_prime_test_assume_prime<>, 10, rnd);
 }
 
 TEST(miller_rabin_prime_test, big_primes) {
     Random rnd;
-    validate_on_big_primes(miller_rabin_prime_test_assume_prime<decltype(rnd)>, 10, rnd);
+    validate_on_big_primes(miller_rabin_prime_test_assume_prime<>, 10, rnd);
 }
 
 TEST(miller_rabin_prime_test, big_product_two_primes) {
     Random rnd;
-    validate_on_big_product_two_primes(miller_rabin_prime_test_assume_prime<decltype(rnd)>, 10, rnd);
+    validate_on_big_product_two_primes(miller_rabin_prime_test_assume_prime<>, 10, rnd);
 }
 
 // miller_rabin_prime_test_iter
