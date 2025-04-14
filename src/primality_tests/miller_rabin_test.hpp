@@ -6,6 +6,8 @@
 
 namespace BigPrimeLib {
 
+const std::vector<BigInt> kMillerRabinDeterministicBasesU64 = {2, 325, 9375, 28178, 450775, 9780504, 1795265022};
+
 inline PrimalityStatus miller_rabin_prime_test_base(const BigInt &n, size_t s, const BigInt &t, const BigInt &base) {
     BigInt x = Math::powm(base, t, n);
     if (x == 1 || x == n - 1) {

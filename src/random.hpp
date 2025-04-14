@@ -10,12 +10,18 @@ using DefaultRandomGenerator = boost::random::mt19937;
 template<class Generator = DefaultRandomGenerator, class SeedType = DefaultRandomGenerator::result_type>
 class Random {
     using Uniform = boost::random::uniform_int_distribution<BigInt>;
+    using UniformReal = boost::random::uniform_real_distribution<double>;
 
 public:
     explicit Random(SeedType seed = kDefaultSeed) : generator_(seed) {}
 
     BigInt uniform(BigInt a, BigInt b) {
         Uniform dist(a, b);
+        return dist(generator_);
+    }
+
+    double uniform_real(double a, double b) {
+        UniformReal dist(a, b);
         return dist(generator_);
     }
 
