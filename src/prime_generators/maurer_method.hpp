@@ -15,12 +15,12 @@ public:
     BigInt p;
     std::unique_ptr<MaurerPrimeCertificate> cert;
 
-    bool verify_assuming_prime_base() const;
-    BigInt get_cert_base() const;
-
 public:
     explicit MaurerPrime(const BigInt &p);
     MaurerPrime(const BigInt &p, const BigInt &r, const BigInt &a, MaurerPrime &q);
+
+    bool verify_assuming_prime_base() const;
+    BigInt get_cert_base() const;
 };
 
 
@@ -57,7 +57,7 @@ inline BigInt MaurerPrime::get_cert_base() const {
 }
 
 
-// generate
+// generation
 
 namespace _detail {
 
@@ -123,6 +123,5 @@ BigInt generate_prime_maurer(size_t bit_size, RandomT &rnd,
     auto [p, r, a] = _detail::generate_prime_maurer_find_p_r_a(bit_size, q, rnd);
     return p;
 }
-
 
 }
