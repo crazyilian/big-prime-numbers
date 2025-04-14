@@ -78,6 +78,37 @@ TEST(generate_random_prime_maurer, big_bit_size) {
         validate_generate_prime_maurer(bit_size, rnd);
     }
 }
+// generate_prime_maurer_with_cert
+
+void validate_generate_prime_maurer_with_cert(size_t bit_size, Random<> &rnd) {
+    auto y = generate_prime_maurer_with_cert(bit_size, rnd);
+    size_t y_bit_size = Math::msb(y.p);
+    EXPECT_TRUE(y_bit_size != bit_size) << y.p << " has " << y_bit_size << " bits, but " << bit_size
+                    << " bits required";
+    EXPECT_TRUE(y.verify_assuming_prime_base()) << "Certificate is incorrect";
+    auto status = miller_rabin_prime_test_assume_prime(y.p, 20, rnd);
+    EXPECT_TRUE(status == PrimalityStatus::Prime) << "Found " << to_string(status) << " number " << y.p;
+
+    for (auto c = y.cert.get(); c != nullptr; c = c->q.cert.get()) {
+        auto status2 = miller_rabin_prime_test_assume_prime(c->q.p, 20, rnd);
+        EXPECT_TRUE(status2 == PrimalityStatus::Prime) << "Found " << to_string(status2) << " number " << c->q.p
+                << " in certificate";
+    }
+}
+
+TEST(generate_prime_maurer_with_cert, small_bit_size) {
+    Random rnd;
+    for (size_t bit_size = 2; bit_size < 300; ++bit_size) {
+        validate_generate_prime_maurer_with_cert(bit_size, rnd);
+    }
+}
+
+TEST(generate_prime_maurer_with_cert, big_bit_size) {
+    Random rnd;
+    for (size_t bit_size = 300; bit_size <= 1000; bit_size += 100) {
+        validate_generate_prime_maurer_with_cert(bit_size, rnd);
+    }
+}
 
 
 }
