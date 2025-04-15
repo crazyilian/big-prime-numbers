@@ -25,11 +25,31 @@ TEST(search_next_prime, small_primes) {
 
 // generate_prime_in_range
 
-void validate_generate_prime_in_range(const BigInt &l, const BigInt &r, Random<> &rnd) {
-    auto y = generate_prime_in_range(l, r, rnd, miller_rabin_prime_test_assume_prime<decltype(rnd)>, 20, rnd);
-    EXPECT_TRUE(l <= y && y <= r) << y << " is not in range " << "[" << l << ", " << r << "]";
-    auto status = miller_rabin_prime_test_assume_prime(y, 20, rnd);
-    EXPECT_TRUE(status == PrimalityStatus::Prime) << "Found " << to_string(status) << " number " << y;
+void validate_generate_prime_in_range(const BigInt &l, const BigInt &r, Random<> &rnd, bool expect_prime) {
+    auto y_opt = generate_prime_in_range(l, r, rnd, miller_rabin_prime_test_assume_prime<decltype(rnd)>, 20, rnd);
+    if (expect_prime) {
+        EXPECT_TRUE(y_opt.has_value()) << "No primes found in range " << "[" << l << ", " << r << "]";
+        auto y = y_opt.value();
+        EXPECT_TRUE(l <= y && y <= r) << y << " is not in range " << "[" << l << ", " << r << "]";
+        auto status = miller_rabin_prime_test_assume_prime(y, 20, rnd);
+        EXPECT_TRUE(status == PrimalityStatus::Prime) << "Found " << to_string(status) << " number " << y;
+    } else {
+        EXPECT_FALSE(y_opt.has_value()) << "Found prime " << y_opt.value() << " in range "
+                << "[" << l << ", " << r << "]";
+    }
+}
+
+TEST(generate_random_prime_in_range, no_primes_range) {
+    Random rnd;
+    auto small_primes = read_numbers(Filenames::SmallPrimes);
+    for (size_t i = 1; i < small_primes.size(); ++i) {
+        BigInt l = small_primes[i - 1] + 1;
+        BigInt r = small_primes[i] - 1;
+        if (l > r) {
+            continue;
+        }
+        validate_generate_prime_in_range(l, r, rnd, false);
+    }
 }
 
 TEST(generate_random_prime_in_range, small_range) {
@@ -39,7 +59,7 @@ TEST(generate_random_prime_in_range, small_range) {
     for (const BigInt &p : small_primes) {
         BigInt l = p - rnd.uniform(0, 100);
         BigInt r = p + rnd.uniform(0, 100);
-        validate_generate_prime_in_range(l, r, rnd);
+        validate_generate_prime_in_range(l, r, rnd, true);
     }
 }
 
@@ -50,7 +70,7 @@ TEST(generate_random_prime_in_range, big_range) {
     for (size_t i = 0; i < 10; ++i) {
         BigInt l = rnd_test.uniform(0, C);
         BigInt r = rnd_test.uniform(2 * l, 4 * C);
-        validate_generate_prime_in_range(l, r, rnd);
+        validate_generate_prime_in_range(l, r, rnd, true);
     }
 }
 

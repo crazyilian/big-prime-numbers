@@ -66,7 +66,7 @@ namespace _detail {
         return generate_prime_in_range(BigInt(1) << (bit_size - 1), (BigInt(1) << bit_size) - 1, rnd,
                                        miller_rabin_prime_test_iter_assume_prime<std::vector<BigInt>::const_iterator>,
                                        kMillerRabinDeterministicBasesU64.begin(),
-                                       kMillerRabinDeterministicBasesU64.end());
+                                       kMillerRabinDeterministicBasesU64.end()).value();
     }
 
     template<class RandomT = Random<>>
