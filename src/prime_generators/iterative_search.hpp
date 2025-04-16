@@ -35,8 +35,8 @@ inline BigInt search_next_prime(const BigInt &l, PrimeTester &prime_tester) {
 }
 
 
-template<class RandomT = Random<>>
-std::optional<BigInt> generate_prime_in_range(const BigInt &l, const BigInt &r, RandomT &rnd,
+template<class RandomGenerator>
+std::optional<BigInt> generate_prime_in_range(const BigInt &l, const BigInt &r, Random<RandomGenerator> &rnd,
                                               PrimeTester &prime_tester) {
     BigInt s = rnd.uniform(l, r);
     return search_next_prime_in_range(s, l, r, prime_tester);

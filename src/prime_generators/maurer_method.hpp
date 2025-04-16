@@ -61,16 +61,16 @@ inline BigInt MaurerPrime::get_cert_base() const {
 
 namespace _detail {
 
-    template<class RandomT = Random<>>
-    BigInt generate_prime_maurer_small_bitsize(size_t bit_size, RandomT &rnd) {
+    template<class RandomGenerator>
+    BigInt generate_prime_maurer_small_bitsize(size_t bit_size, Random<RandomGenerator> &rnd) {
         MillerRabinPrimeTesterIter prime_tester(kMillerRabinDeterministicBasesU64.begin(),
                                                 kMillerRabinDeterministicBasesU64.end());
         auto p = generate_prime_in_range(BigInt(1) << (bit_size - 1), (BigInt(1) << bit_size) - 1, rnd, prime_tester);
         return p.value();
     }
 
-    template<class RandomT = Random<>>
-    size_t generate_prime_maurer_new_bitsize(size_t bit_size, size_t bit_margin, RandomT &rnd) {
+    template<class RandomGenerator>
+    size_t generate_prime_maurer_new_bitsize(size_t bit_size, size_t bit_margin, Random<RandomGenerator> &rnd) {
         size_t new_bit_size = 0;
         do {
             double alpha = std::pow(2, rnd.uniform_real(-1, 0));
@@ -79,8 +79,9 @@ namespace _detail {
         return new_bit_size;
     }
 
-    template<class RandomT = Random<>>
-    std::array<BigInt, 3> generate_prime_maurer_find_p_r_a(size_t bit_size, const BigInt &q, RandomT &rnd) {
+    template<class RandomGenerator>
+    std::array<BigInt, 3> generate_prime_maurer_find_p_r_a(size_t bit_size, const BigInt &q,
+                                                           Random<RandomGenerator> &rnd) {
         auto lb = ((BigInt(1) << (bit_size - 2)) + q - 1) / q;
         auto ub = ((BigInt(1) << (bit_size - 1)) - 1) / q;
         while (true) {
@@ -96,8 +97,8 @@ namespace _detail {
 
 }
 
-template<class RandomT = Random<>>
-MaurerPrime generate_prime_maurer_with_cert(size_t bit_size, RandomT &rnd,
+template<class RandomGenerator>
+MaurerPrime generate_prime_maurer_with_cert(size_t bit_size, Random<RandomGenerator> &rnd,
                                             size_t bit_margin = 20, size_t iterative_bit_limit = 64) {
     assert(bit_size > 1 && bit_margin >= 1 && bit_margin < iterative_bit_limit && iterative_bit_limit <= 64);
 
@@ -110,8 +111,8 @@ MaurerPrime generate_prime_maurer_with_cert(size_t bit_size, RandomT &rnd,
     return MaurerPrime(p, r, a, q);
 }
 
-template<class RandomT = Random<>>
-BigInt generate_prime_maurer(size_t bit_size, RandomT &rnd,
+template<class RandomGenerator>
+BigInt generate_prime_maurer(size_t bit_size, Random<RandomGenerator> &rnd,
                              size_t bit_margin = 20, size_t iterative_bit_limit = 64) {
     assert(bit_size > 1 && bit_margin >= 1 && bit_margin < iterative_bit_limit && iterative_bit_limit <= 64);
 

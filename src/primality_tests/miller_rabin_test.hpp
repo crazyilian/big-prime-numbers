@@ -51,14 +51,14 @@ public:
 };
 
 
-template<class RandomT = Random<>>
+template<class RandomGenerator>
 class MillerRabinPrimeTester : public PrimeTester {
 public:
     size_t times;
-    RandomT rnd;
+    Random<RandomGenerator> rnd;
 
 public:
-    MillerRabinPrimeTester(size_t times, RandomT rnd, bool assume_prime = true)
+    MillerRabinPrimeTester(size_t times, Random<RandomGenerator> rnd, bool assume_prime = true)
         : PrimeTester(assume_prime ? PrimalityStatus::Prime : PrimalityStatus::Uncertain), times(times), rnd(rnd) {}
 
     PrimalityStatus test_raw(const BigInt &n) override {

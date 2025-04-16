@@ -43,14 +43,14 @@ public:
     }
 };
 
-template<class RandomT = Random<>>
+template<class RandomGenerator>
 class ProthPrimeTester : public PrimeTester {
 public:
     size_t times;
-    RandomT rnd;
+    Random<RandomGenerator> rnd;
 
 public:
-    ProthPrimeTester(size_t times, RandomT rnd, bool assume_composite = true)
+    ProthPrimeTester(size_t times, Random<RandomGenerator> rnd, bool assume_composite = true)
         : PrimeTester(assume_composite ? PrimalityStatus::Composite : PrimalityStatus::Uncertain),
           times(times), rnd(rnd) {}
 
