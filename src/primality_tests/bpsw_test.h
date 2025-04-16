@@ -20,12 +20,14 @@ class BPSWMillerPrimeTester : public BPSWPrimeTester {
 public:
     using BPSWPrimeTester::BPSWPrimeTester;
     PrimalityStatus test_raw(const BigInt &n) override;
+    std::unique_ptr<PrimeTester> clone() const override;
 };
 
 class BPSWFermatPrimeTester : public BPSWPrimeTester {
 public:
     using BPSWPrimeTester::BPSWPrimeTester;
     PrimalityStatus test_raw(const BigInt &n) override;
+    std::unique_ptr<PrimeTester> clone() const override;
 };
 
 }

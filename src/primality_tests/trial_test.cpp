@@ -19,4 +19,8 @@ PrimalityStatus TrialPrimeTester::test_raw(const BigInt &n) {
     return PrimalityStatus::Prime;
 }
 
+std::unique_ptr<PrimeTester> TrialPrimeTester::clone() const {
+    return std::make_unique<TrialPrimeTester>(*this);
+}
+
 }

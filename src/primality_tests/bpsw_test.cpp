@@ -65,6 +65,10 @@ PrimalityStatus BPSWMillerPrimeTester::test_raw(const BigInt &n) {
     return lucas_test_wrapper(n);
 }
 
+std::unique_ptr<PrimeTester> BPSWMillerPrimeTester::clone() const {
+    return std::make_unique<BPSWMillerPrimeTester>(*this);
+}
+
 PrimalityStatus BPSWFermatPrimeTester::test_raw(const BigInt &n) {
     if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {
         return status;
@@ -75,6 +79,10 @@ PrimalityStatus BPSWFermatPrimeTester::test_raw(const BigInt &n) {
     }
 
     return lucas_test_wrapper(n);
+}
+
+std::unique_ptr<PrimeTester> BPSWFermatPrimeTester::clone() const {
+    return std::make_unique<BPSWFermatPrimeTester>(*this);
 }
 
 }

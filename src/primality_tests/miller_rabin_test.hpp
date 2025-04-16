@@ -35,6 +35,10 @@ public:
         : PrimeTesterIter<Iterator>(default_begin, default_end,
                                     assume_prime ? PrimalityStatus::Prime : PrimalityStatus::Uncertain) {}
 
+    std::unique_ptr<PrimeTester> clone() const override {
+        return std::make_unique<MillerRabinPrimeTesterIter>(*this);
+    }
+
     PrimalityStatus test_raw(const BigInt &n, Iterator base_begin, Iterator base_end) override {
         if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {
             return status;
@@ -60,6 +64,10 @@ public:
 public:
     MillerRabinPrimeTester(size_t times, Random<RandomGenerator> rnd, bool assume_prime = true)
         : PrimeTester(assume_prime ? PrimalityStatus::Prime : PrimalityStatus::Uncertain), times(times), rnd(rnd) {}
+
+    std::unique_ptr<PrimeTester> clone() const override {
+        return std::make_unique<MillerRabinPrimeTester>(*this);
+    }
 
     PrimalityStatus test_raw(const BigInt &n) override {
         if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {

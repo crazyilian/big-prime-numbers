@@ -9,6 +9,7 @@ class TrialPrimeTester : public PrimeTester {
 public:
     TrialPrimeTester();
     PrimalityStatus test_raw(const BigInt &n) override;
+    std::unique_ptr<PrimeTester> clone() const override;
 };
 
 

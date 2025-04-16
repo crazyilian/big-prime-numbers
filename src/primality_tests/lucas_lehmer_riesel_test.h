@@ -9,6 +9,7 @@ class LucasLehmerRieselPrimeTester : public PrimeTester {
 public:
     LucasLehmerRieselPrimeTester();
     PrimalityStatus test_raw(const BigInt &n) override;
+    std::unique_ptr<PrimeTester> clone() const override;
 };
 
 }

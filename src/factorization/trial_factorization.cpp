@@ -1,9 +1,17 @@
 #include "trial_factorization.h"
-#include "factorization_utils.hpp"
+#include "factorization_utils.h"
 
 namespace BigPrimeLib {
 
-std::optional<BigInt> trial_find_factor(const BigInt &n) {
+TrialFactorizer::TrialFactorizer() {}
+
+TrialFactorizer::TrialFactorizer(const PrimeTester &prime_tester) : Factorizer(prime_tester) {}
+
+std::unique_ptr<Factorizer> TrialFactorizer::clone() const {
+    return std::make_unique<TrialFactorizer>(*this);
+}
+
+std::optional<BigInt> TrialFactorizer::find_factor(const BigInt &n) {
     assert(n > 0);
     if (n <= 3) {
         return std::nullopt;
@@ -17,10 +25,6 @@ std::optional<BigInt> trial_find_factor(const BigInt &n) {
         }
     }
     return std::nullopt;
-}
-
-std::vector<BigInt> trial_factorization(const BigInt &n) {
-    return full_factorization(n, trial_find_factor);
 }
 
 }

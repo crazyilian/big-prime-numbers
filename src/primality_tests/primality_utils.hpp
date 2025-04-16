@@ -37,8 +37,9 @@ public:
 
 public:
     explicit PrimeTester(PrimalityStatus on_uncertain) : on_uncertain(on_uncertain) {}
-
     virtual ~PrimeTester() = default;
+    virtual std::unique_ptr<PrimeTester> clone() const = 0;
+
     virtual PrimalityStatus test_raw(const BigInt &n) = 0;
 
     PrimalityStatus test(const BigInt &n) {
@@ -58,7 +59,6 @@ public:
     PrimeTesterIter(Iterator default_begin, Iterator default_end, PrimalityStatus on_uncertain)
         : PrimeTester(on_uncertain), default_begin(default_begin), default_end(default_end) {}
 
-public:
     virtual PrimalityStatus test_raw(const BigInt &n, Iterator begin, Iterator end) = 0;
 
     PrimalityStatus test_raw(const BigInt &n) override {

@@ -23,4 +23,8 @@ PrimalityStatus LucasLehmerPrimeTester::test_raw(const BigInt &n) {
     }
 }
 
+std::unique_ptr<PrimeTester> LucasLehmerPrimeTester::clone() const {
+    return std::make_unique<LucasLehmerPrimeTester>(*this);
+}
+
 }

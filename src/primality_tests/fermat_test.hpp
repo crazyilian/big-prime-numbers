@@ -24,6 +24,10 @@ public:
         : PrimeTesterIter<Iterator>(default_begin, default_end,
                                     assume_prime ? PrimalityStatus::Prime : PrimalityStatus::Uncertain) {}
 
+    std::unique_ptr<PrimeTester> clone() const override {
+        return std::make_unique<FermatPrimeTesterIter>(*this);
+    }
+
     PrimalityStatus test_raw(const BigInt &n, Iterator base_begin, Iterator base_end) override {
         if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {
             return status;
@@ -35,6 +39,7 @@ public:
         }
         return PrimalityStatus::Uncertain;
     }
+
 };
 
 template<class RandomGenerator>
@@ -46,6 +51,10 @@ public:
 public:
     FermatPrimeTester(size_t times, Random<RandomGenerator> rnd, bool assume_prime = true)
         : PrimeTester(assume_prime ? PrimalityStatus::Prime : PrimalityStatus::Uncertain), times(times), rnd(rnd) {}
+
+    std::unique_ptr<PrimeTester> clone() const override {
+        return std::make_unique<FermatPrimeTester>(*this);
+    }
 
     PrimalityStatus test_raw(const BigInt &n) override {
         if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {

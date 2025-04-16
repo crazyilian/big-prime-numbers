@@ -21,11 +21,15 @@ inline PrimalityStatus proth_prime_test_base(const BigInt &n, const BigInt &base
 template<class Iterator>
 class ProthPrimeTesterIter : public PrimeTesterIter<Iterator> {
 public:
-    ProthPrimeTesterIter(bool assume_composite = true)
+    explicit ProthPrimeTesterIter(bool assume_composite = true)
         : PrimeTesterIter<Iterator>(assume_composite ? PrimalityStatus::Composite : PrimalityStatus::Uncertain) {}
     ProthPrimeTesterIter(Iterator default_begin, Iterator default_end, bool assume_composite = true)
         : PrimeTesterIter<Iterator>(default_begin, default_end,
                                     assume_composite ? PrimalityStatus::Composite : PrimalityStatus::Uncertain) {}
+
+    std::unique_ptr<PrimeTester> clone() const override {
+        return std::make_unique<ProthPrimeTesterIter>(*this);
+    }
 
     PrimalityStatus test_raw(const BigInt &n, Iterator base_begin, Iterator base_end) override {
         if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {
@@ -53,6 +57,10 @@ public:
     ProthPrimeTester(size_t times, Random<RandomGenerator> rnd, bool assume_composite = true)
         : PrimeTester(assume_composite ? PrimalityStatus::Composite : PrimalityStatus::Uncertain),
           times(times), rnd(rnd) {}
+
+    std::unique_ptr<PrimeTester> clone() const override {
+        return std::make_unique<ProthPrimeTester>(*this);
+    }
 
     PrimalityStatus test_raw(const BigInt &n) override {
         // n = k*2^s+1, k<2^s
