@@ -1,14 +1,15 @@
 #pragma once
 
+#include <boost/iterator/function_input_iterator.hpp>
 #include "common.h"
 #include "random.hpp"
-#include "primality_utils.h"
+#include "primality_utils.hpp"
 
 namespace BigPrimeLib {
 
 const std::vector<BigInt> kMillerRabinDeterministicBasesU64 = {2, 325, 9375, 28178, 450775, 9780504, 1795265022};
 
-inline PrimalityStatus miller_rabin_prime_test_base(const BigInt &n, size_t s, const BigInt &t, const BigInt &base) {
+inline PrimalityStatus miller_rabin_test_base(const BigInt &n, size_t s, const BigInt &t, const BigInt &base) {
     BigInt x = Math::powm(base, t, n);
     if (x == 1 || x == n - 1) {
         return PrimalityStatus::Uncertain;
@@ -26,38 +27,51 @@ inline PrimalityStatus miller_rabin_prime_test_base(const BigInt &n, size_t s, c
 }
 
 template<class Iterator>
-PrimalityStatus miller_rabin_prime_test_iter(const BigInt &n, Iterator base_begin, Iterator base_end) {
-    if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {
-        return status;
-    }
-    size_t s = Math::lsb(n - 1);
-    BigInt t = n >> s;
-    for (auto it = base_begin; it != base_end; ++it) {
-        BigInt base = *it;
-        if (miller_rabin_prime_test_base(n, s, t, base) == PrimalityStatus::Composite) {
-            return PrimalityStatus::Composite;
+class MillerRabinPrimeTesterIter : public PrimeTesterIter<Iterator> {
+public:
+    explicit MillerRabinPrimeTesterIter(bool assume_prime = true)
+        : PrimeTesterIter<Iterator>(assume_prime ? PrimalityStatus::Prime : PrimalityStatus::Uncertain) {}
+    MillerRabinPrimeTesterIter(Iterator default_begin, Iterator default_end, bool assume_prime = true)
+        : PrimeTesterIter<Iterator>(default_begin, default_end,
+                                    assume_prime ? PrimalityStatus::Prime : PrimalityStatus::Uncertain) {}
+
+    PrimalityStatus test_raw(const BigInt &n, Iterator base_begin, Iterator base_end) override {
+        if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {
+            return status;
         }
+        size_t s = Math::lsb(n - 1);
+        BigInt t = n >> s;
+        for (auto it = base_begin; it != base_end; ++it) {
+            if (miller_rabin_test_base(n, s, t, *it) == PrimalityStatus::Composite) {
+                return PrimalityStatus::Composite;
+            }
+        }
+        return PrimalityStatus::Uncertain;
     }
-    return PrimalityStatus::Uncertain;
-}
+};
+
 
 template<class RandomT = Random<>>
-PrimalityStatus miller_rabin_prime_test(const BigInt &n, size_t times, RandomT &rnd) {
-    if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {
-        return status;
+class MillerRabinPrimeTester : public PrimeTester {
+public:
+    size_t times;
+    RandomT rnd;
+
+public:
+    MillerRabinPrimeTester(size_t times, RandomT rnd, bool assume_prime = true)
+        : PrimeTester(assume_prime ? PrimalityStatus::Prime : PrimalityStatus::Uncertain), times(times), rnd(rnd) {}
+
+    PrimalityStatus test_raw(const BigInt &n) override {
+        if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {
+            return status;
+        }
+        std::function<BigInt()> f = [this, &n]() { return rnd.uniform(2, n - 2); };
+        return tester_iter_.test(n, Iterator(f, 0), Iterator(f, times));
     }
-    RandomSequence rndseq([&rnd, &n]() { return rnd.uniform(2, n - 2); }, times);
-    return miller_rabin_prime_test_iter(n, rndseq.begin(), rndseq.end());
-}
 
-template<class Iterator>
-PrimalityStatus miller_rabin_prime_test_iter_assume_prime(const BigInt &n, Iterator base_begin, Iterator base_end) {
-    return uncertain2prime(miller_rabin_prime_test_iter(n, base_begin, base_end));
-}
-
-template<class RandomT = Random<>>
-PrimalityStatus miller_rabin_prime_test_assume_prime(const BigInt &n, size_t times, RandomT &rnd) {
-    return uncertain2prime(miller_rabin_prime_test(n, times, rnd));
-}
+private:
+    using Iterator = boost::function_input_iterator<std::function<BigInt()>, size_t>;
+    MillerRabinPrimeTesterIter<Iterator> tester_iter_;
+};
 
 }

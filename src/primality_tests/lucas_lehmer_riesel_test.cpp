@@ -4,7 +4,9 @@
 
 namespace BigPrimeLib {
 
-PrimalityStatus lucas_lehmer_riesel_prime_test(const BigInt &n) {
+LucasLehmerRieselPrimeTester::LucasLehmerRieselPrimeTester() : PrimeTester(PrimalityStatus::Uncertain) {}
+
+PrimalityStatus LucasLehmerRieselPrimeTester::test_raw(const BigInt &n) {
     // n = k * 2^s - 1, k<2^s
     assert(n > 0);
     uint64_t s = Math::lsb(n + 1);

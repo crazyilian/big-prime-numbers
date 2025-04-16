@@ -63,10 +63,10 @@ namespace _detail {
 
     template<class RandomT = Random<>>
     BigInt generate_prime_maurer_small_bitsize(size_t bit_size, RandomT &rnd) {
-        return generate_prime_in_range(BigInt(1) << (bit_size - 1), (BigInt(1) << bit_size) - 1, rnd,
-                                       miller_rabin_prime_test_iter_assume_prime<std::vector<BigInt>::const_iterator>,
-                                       kMillerRabinDeterministicBasesU64.begin(),
-                                       kMillerRabinDeterministicBasesU64.end()).value();
+        MillerRabinPrimeTesterIter prime_tester(kMillerRabinDeterministicBasesU64.begin(),
+                                                kMillerRabinDeterministicBasesU64.end());
+        auto p = generate_prime_in_range(BigInt(1) << (bit_size - 1), (BigInt(1) << bit_size) - 1, rnd, prime_tester);
+        return p.value();
     }
 
     template<class RandomT = Random<>>

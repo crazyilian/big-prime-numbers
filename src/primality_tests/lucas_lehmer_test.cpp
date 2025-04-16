@@ -2,7 +2,9 @@
 
 namespace BigPrimeLib {
 
-PrimalityStatus lucas_lehmer_prime_test(const BigInt &n) {
+LucasLehmerPrimeTester::LucasLehmerPrimeTester() : PrimeTester(PrimalityStatus::Uncertain) {}
+
+PrimalityStatus LucasLehmerPrimeTester::test_raw(const BigInt &n) {
     // n = 2^p-1, p is prime
     assert(n > 0);
     uint64_t p = Math::lsb(n + 1);

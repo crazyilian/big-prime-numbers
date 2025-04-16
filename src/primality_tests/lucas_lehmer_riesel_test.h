@@ -1,10 +1,14 @@
 #pragma once
 
 #include "common.h"
-#include "primality_utils.h"
+#include "primality_utils.hpp"
 
 namespace BigPrimeLib {
 
-PrimalityStatus lucas_lehmer_riesel_prime_test(const BigInt &n);
+class LucasLehmerRieselPrimeTester : public PrimeTester {
+public:
+    LucasLehmerRieselPrimeTester();
+    PrimalityStatus test_raw(const BigInt &n) override;
+};
 
 }

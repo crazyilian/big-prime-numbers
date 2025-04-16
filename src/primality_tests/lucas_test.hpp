@@ -1,7 +1,7 @@
 #pragma once
 
 #include "common.h"
-#include "primality_utils.h"
+#include "primality_utils.hpp"
 #include "jacobi.hpp"
 #include "lucas_sequence.h"
 
@@ -60,7 +60,7 @@ PrimalityStatus strong_lucas_test(const BigInt &n, const T &p, const T &q) {
     return strong_lucas_test(n, p, q, jacobi(D, n));
 }
 
-// extra_strong_lucas_test
+// stronger_lucas_test
 
 template<typename T>
 PrimalityStatus stronger_lucas_test(const BigInt &n, const BigInt &d, const size_t &s, const T &p, const T &q,

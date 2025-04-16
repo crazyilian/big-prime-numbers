@@ -2,7 +2,9 @@
 
 namespace BigPrimeLib {
 
-PrimalityStatus trial_prime_test(const BigInt &n) {
+TrialPrimeTester::TrialPrimeTester() : PrimeTester(PrimalityStatus::Uncertain) {}
+
+PrimalityStatus TrialPrimeTester::test_raw(const BigInt &n) {
     if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {
         return status;
     }

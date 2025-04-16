@@ -4,32 +4,6 @@
 
 namespace BigPrimeLib {
 
-// RandomSequence
-
-void test_random_seq(int length, int seed) {
-    DefaultRandomGenerator rnd(seed);
-
-    RandomSequence rnd_seq(rnd, length);
-    for (const auto &val : rnd_seq) {
-        auto true_val = rnd();
-        EXPECT_TRUE(val == true_val) << "RandomSequence(" << length << ", " << seed << ") value " << val
-                << " is not equal to true value " << true_val << " during first run";
-    }
-
-
-    DefaultRandomGenerator rnd2(seed);
-    for (const auto &val : rnd_seq) {
-        auto true_val = rnd2();
-        EXPECT_TRUE(val == true_val) << "RandomSequence(" << length << ", " << seed << ") value " << val
-                << " is not equal to true value " << true_val << " during second run";
-    }
-}
-
-TEST(RandomSequence, preserve_sequence_values) {
-    test_random_seq(10, 42);
-    test_random_seq(1000, 777);
-}
-
 // Random
 
 TEST(Random, uniform) {

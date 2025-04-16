@@ -1,20 +1,31 @@
 #pragma once
 
 #include "common.h"
-#include "primality_utils.h"
+#include "primality_utils.hpp"
 
 namespace BigPrimeLib {
 
-inline PrimalityStatus bpsw_fermat_prime_test(const BigInt &n, bool known_wieferich = true,
-                                              bool stronger_lucas = false);
+class BPSWPrimeTester : public PrimeTester {
+public:
+    bool known_wieferich, stronger_lucas;
 
-inline PrimalityStatus bpsw_miller_prime_test(const BigInt &n, bool known_wieferich = true,
-                                              bool stronger_lucas = false);
+public:
+    explicit BPSWPrimeTester(bool known_wieferich = true, bool stronger_lucas = false, bool assume_prime = true);
 
-inline PrimalityStatus bpsw_fermat_prime_test_assume_prime(const BigInt &n, bool known_wieferich = true,
-                                                           bool stronger_lucas = false);
+protected:
+    PrimalityStatus lucas_test_wrapper(const BigInt &n) const;
+};
 
-inline PrimalityStatus bpsw_miller_prime_test_assume_prime(const BigInt &n, bool known_wieferich = true,
-                                                           bool stronger_lucas = false);
+class BPSWMillerPrimeTester : public BPSWPrimeTester {
+public:
+    using BPSWPrimeTester::BPSWPrimeTester;
+    PrimalityStatus test_raw(const BigInt &n) override;
+};
+
+class BPSWFermatPrimeTester : public BPSWPrimeTester {
+public:
+    using BPSWPrimeTester::BPSWPrimeTester;
+    PrimalityStatus test_raw(const BigInt &n) override;
+};
 
 }

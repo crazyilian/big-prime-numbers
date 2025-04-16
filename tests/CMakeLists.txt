@@ -15,6 +15,7 @@ add_executable(
         validate_random.cpp
         validate_primality_tests.cpp
         validate_prime_generators.cpp
+        validate_factorization.cpp
         test_utils.cpp
 )
 target_link_libraries(tests big_prime_lib GTest::gtest_main)
