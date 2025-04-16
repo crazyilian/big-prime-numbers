@@ -243,6 +243,22 @@ TEST(bpsw_miller_prime_test, small_squares) {
     }
 }
 
+TEST(bpsw_miller_prime_test, wieferich_combinations) {
+    BPSWMillerPrimeTester t(true, false);
+    BigInt w1 = 1093;
+    BigInt w2 = 3511;
+    for (size_t i = 0; i < 20; ++i) {
+        for (size_t j = 0; j < 20; ++j) {
+            if (i + j <= 1) {
+                continue;
+            }
+            BigInt x = Math::pow(w1, i) * Math::pow(w2, j);
+            auto status = t.test(x);
+            EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << "^2 marked as "
+                    << to_string(status);
+        }
+    }
+}
 
 // bpsw_miller_prime_test_no_wieferich
 
@@ -316,6 +332,23 @@ TEST(bpsw_fermat_prime_test, small_squares) {
     for (BigInt x = 2; x < 300000; ++x) {
         auto status = t.test(x * x);
         EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << "^2 marked as " << to_string(status);
+    }
+}
+
+TEST(bpsw_fermat_prime_test, wieferich_combinations) {
+    BPSWFermatPrimeTester t(true, false);
+    BigInt w1 = 1093;
+    BigInt w2 = 3511;
+    for (size_t i = 0; i < 20; ++i) {
+        for (size_t j = 0; j < 20; ++j) {
+            if (i + j <= 1) {
+                continue;
+            }
+            BigInt x = Math::pow(w1, i) * Math::pow(w2, j);
+            auto status = t.test(x);
+            EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << "^2 marked as "
+                    << to_string(status);
+        }
     }
 }
 
