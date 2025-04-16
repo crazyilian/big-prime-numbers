@@ -1,3 +1,4 @@
+#include <set>
 #include "bpsw_test.h"
 #include "fermat_test.hpp"
 #include "miller_rabin_test.hpp"
@@ -6,9 +7,10 @@
 
 namespace BigPrimeLib {
 
+const std::set<BigInt> kWieferichPrimesSquare = {1194649, 12327121}; // OEIS: A001220
+
 PrimalityStatus BPSWPrimeTester::lucas_test_wrapper(const BigInt &n) const {
-    if (known_wieferich && (n == 1194649 || n == 12327121)) {
-        // OEIS: A001220
+    if (known_wieferich && kWieferichPrimesSquare.contains(n)) {
         return PrimalityStatus::Composite;
     }
 
