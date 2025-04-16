@@ -254,7 +254,7 @@ TEST(bpsw_miller_prime_test, wieferich_combinations) {
             }
             BigInt x = Math::pow(w1, i) * Math::pow(w2, j);
             auto status = t.test(x);
-            EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << "^2 marked as "
+            EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << " marked as "
                     << to_string(status);
         }
     }
@@ -346,7 +346,7 @@ TEST(bpsw_fermat_prime_test, wieferich_combinations) {
             }
             BigInt x = Math::pow(w1, i) * Math::pow(w2, j);
             auto status = t.test(x);
-            EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << "^2 marked as "
+            EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << " marked as "
                     << to_string(status);
         }
     }
