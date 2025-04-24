@@ -2,8 +2,9 @@
 #include "common.h"
 #include "test_utils.h"
 #include "random.hpp"
-#include "factorization/trial_factorization.h"
 #include "primality_tests/miller_rabin_test.hpp"
+#include "factorization/trial_factorization.h"
+#include "factorization/fermat_factorization.h"
 
 namespace BigPrimeLib {
 
@@ -92,19 +93,21 @@ void validate_many_small(PrimeTester &t, Factorizer &f) {
 
 void validate_many_small_one_big(PrimeTester &t, Factorizer &f) {
     Random rnd;
+    BigInt e1000 = Math::pow(BigInt(10), 1000);
     for (size_t cnt_div = 10; cnt_div <= 100; cnt_div += 10) {
         BigInt n = gen_small_divisors(2000, cnt_div, rnd);
-        n *= gen_big_prime(BigInt(1e1000l), rnd);
+        n *= gen_big_prime(e1000, rnd);
         check_factorization(n, f.factorization(n), t);
     }
 }
 
 void validate_many_small_two_big(PrimeTester &t, Factorizer &f) {
     Random rnd;
+    BigInt e700 = Math::pow(BigInt(10), 700);
     for (size_t cnt_div = 10; cnt_div <= 100; cnt_div += 10) {
         BigInt n = gen_small_divisors(2000, cnt_div, rnd);
-        BigInt p1 = gen_big_prime(BigInt(1e700l), rnd);
-        BigInt p2 = gen_big_prime(BigInt(1e700l), rnd);
+        BigInt p1 = gen_big_prime(e700, rnd);
+        BigInt p2 = gen_big_prime(e700, rnd);
         n *= p1 * p2;
         check_factorization(n, f.factorization(n), t);
     }
@@ -130,7 +133,6 @@ TEST(trial_factorization, small_and_medium) {
     validate_medium(mrt, f);
 }
 
-
 TEST(trial_factorization, many_small) {
     MillerRabinPrimeTester mrt(20, Random());
     TrialFactorizer f;
@@ -141,6 +143,31 @@ TEST(trial_factorization_with_prime_test, many_small_one_big) {
     MillerRabinPrimeTester mrt(20, Random());
     TrialFactorizer f(MillerRabinPrimeTester(10, Random()));
     validate_many_small_one_big(mrt, f);
+}
+
+// fermat_factorization
+
+TEST(fermat_factorization, small) {
+    MillerRabinPrimeTester mrt(20, Random());
+    FermatFactorizer f;
+    validate_small(mrt, f);
+}
+
+TEST(fermat_factorization, div_near_sqrt) {
+    MillerRabinPrimeTester mrt(20, Random());
+    FermatFactorizer f;
+    Random rnd;
+    BigInt e1000 = Math::pow(BigInt(10), 1000);
+    for (size_t i = 0; i < 1000; ++i) {
+        BigInt a = rnd.uniform(e1000, 2 * e1000);
+        BigInt b = rnd.uniform(1, 10000);
+        BigInt n = (a + b) * (a - b);
+        auto factor = f.find_factor(n);
+        EXPECT_TRUE(factor.has_value() && factor.value() != 1 && factor.value() != n) << "Factor of "
+                << a + b << " * " << a - b << " not found";
+        EXPECT_TRUE(n % factor.value() == 0) << "Found " << n % factor.value() << " that is not a factor of "
+                << a + b << " * " << a - b;
+    }
 }
 
 }

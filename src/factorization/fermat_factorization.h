@@ -5,10 +5,10 @@
 
 namespace BigPrimeLib {
 
-class TrialFactorizer : public Factorizer {
+class FermatFactorizer : public Factorizer {
 public:
-    TrialFactorizer();
-    explicit TrialFactorizer(const PrimeTester &prime_tester);
+    FermatFactorizer();
+    explicit FermatFactorizer(const PrimeTester &prime_tester);
     std::optional<BigInt> find_factor(const BigInt &n) override;
     std::unique_ptr<Factorizer> clone() const override;
 };
