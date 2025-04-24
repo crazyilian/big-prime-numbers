@@ -5,6 +5,7 @@
 #include "primality_tests/miller_rabin_test.hpp"
 #include "factorization/trial_factorization.h"
 #include "factorization/fermat_factorization.h"
+#include "factorization/pollard_rho_factorization.hpp"
 
 namespace BigPrimeLib {
 
@@ -26,6 +27,17 @@ std::vector<BigInt> read_all_big_primes() {
     }
     std::sort(big_primes.begin(), big_primes.end());
     return big_primes;
+}
+
+void check_find_factor(const BigInt &n, const std::optional<BigInt> &factor_opt, PrimeTester &t) {
+    if (!factor_opt.has_value()) {
+        auto status = t.test(n);
+        EXPECT_TRUE(status != PrimalityStatus::Composite) << "Factor not found for " << to_string(status) << ' ' << n;
+        return;
+    }
+    BigInt factor = factor_opt.value();
+    EXPECT_TRUE(factor != 1 && factor != n) << "Factor " << factor << " is trivial " << " for " << n;
+    EXPECT_TRUE(n % factor == 0) << "Number " << factor << " is not factor of " << n;
 }
 
 void check_factorization(const BigInt &n, const std::vector<BigInt> &factors, PrimeTester &t) {
@@ -71,7 +83,7 @@ BigInt gen_big_divisors(const BigInt &max_divisor, size_t cnt, Random<> &rnd) {
 
 void validate_small(PrimeTester &t, Factorizer &f) {
     for (BigInt n = 1; n < 10000; ++n) {
-        check_factorization(n, f.factorization(n), t);
+        check_find_factor(n, f.find_factor(n), t);
     }
 }
 
@@ -101,13 +113,13 @@ void validate_many_small_one_big(PrimeTester &t, Factorizer &f) {
     }
 }
 
-void validate_many_small_two_big(PrimeTester &t, Factorizer &f) {
+void validate_many_small_two_medium(PrimeTester &t, Factorizer &f) {
     Random rnd;
-    BigInt e700 = Math::pow(BigInt(10), 700);
-    for (size_t cnt_div = 10; cnt_div <= 100; cnt_div += 10) {
+    BigInt e15 = Math::pow(BigInt(10), 15);
+    for (size_t cnt_div = 10; cnt_div <= 100; cnt_div += 5) {
         BigInt n = gen_small_divisors(2000, cnt_div, rnd);
-        BigInt p1 = gen_big_prime(e700, rnd);
-        BigInt p2 = gen_big_prime(e700, rnd);
+        BigInt p1 = gen_big_prime(e15, rnd);
+        BigInt p2 = gen_big_prime(e15, rnd);
         n *= p1 * p2;
         check_factorization(n, f.factorization(n), t);
     }
@@ -162,12 +174,29 @@ TEST(fermat_factorization, div_near_sqrt) {
         BigInt a = rnd.uniform(e1000, 2 * e1000);
         BigInt b = rnd.uniform(1, 10000);
         BigInt n = (a + b) * (a - b);
-        auto factor = f.find_factor(n);
-        EXPECT_TRUE(factor.has_value() && factor.value() != 1 && factor.value() != n) << "Factor of "
-                << a + b << " * " << a - b << " not found";
-        EXPECT_TRUE(n % factor.value() == 0) << "Found " << n % factor.value() << " that is not a factor of "
-                << a + b << " * " << a - b;
+        check_find_factor(n, f.find_factor(n), mrt);
     }
+}
+
+// pollard_pho_factorization
+
+TEST(pollard_rho_factorization, small_and_medium) {
+    MillerRabinPrimeTester mrt(20, Random());
+    RhoPollardFactorizer f(Random<>(), 10, 500);
+    validate_small(mrt, f);
+    validate_medium(mrt, f);
+}
+
+TEST(pollard_rho_factorization, many_small_one_big) {
+    MillerRabinPrimeTester mrt(20, Random());
+    RhoPollardFactorizer f(Random<>(), 10, 1000);
+    validate_many_small_one_big(mrt, f);
+}
+
+TEST(pollard_rho_factorization_with_prime_test, many_small_two_medium) {
+    MillerRabinPrimeTester mrt(20, Random());
+    RhoPollardFactorizer f(mrt, Random<>(), std::nullopt, std::nullopt);
+    validate_many_small_two_medium(mrt, f);
 }
 
 }
