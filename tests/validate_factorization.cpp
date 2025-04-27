@@ -5,6 +5,7 @@
 #include "primality_tests/miller_rabin_test.hpp"
 #include "factorization/trial_factorization.h"
 #include "factorization/fermat_factorization.h"
+#include "factorization/pollard_p1_factorization.hpp"
 #include "factorization/pollard_rho_factorization.hpp"
 
 namespace BigPrimeLib {
@@ -182,21 +183,38 @@ TEST(fermat_factorization, div_near_sqrt) {
 
 TEST(pollard_rho_factorization, small_and_medium) {
     MillerRabinPrimeTester mrt(20, Random());
-    RhoPollardFactorizer f(Random<>(), 10, 500);
+    PollardRhoFactorizer f(Random<>(), 10, 500);
     validate_small(mrt, f);
     validate_medium(mrt, f);
 }
 
 TEST(pollard_rho_factorization, many_small_one_big) {
     MillerRabinPrimeTester mrt(20, Random());
-    RhoPollardFactorizer f(Random<>(), 10, 1000);
+    PollardRhoFactorizer f(Random<>(), 10, 1000);
     validate_many_small_one_big(mrt, f);
 }
 
 TEST(pollard_rho_factorization_with_prime_test, many_small_two_medium) {
     MillerRabinPrimeTester mrt(20, Random());
-    RhoPollardFactorizer f(mrt, Random<>(), std::nullopt, std::nullopt);
+    PollardRhoFactorizer f(mrt, Random<>(), std::nullopt, std::nullopt);
     validate_many_small_two_medium(mrt, f);
 }
+
+// pollard_p1_factorization
+
+TEST(pollard_p1_factorization, small_and_medium) {
+    MillerRabinPrimeTester mrt(20, Random());
+    PollardP1Factorizer f(Random<>(), 15, 5000);
+    validate_small(mrt, f);
+    validate_medium(mrt, f);
+}
+
+TEST(pollard_p1_factorization_with_prime_test, many_small_one_big) {
+    MillerRabinPrimeTester mrt(20, Random());
+    PollardP1Factorizer f(mrt, Random<>(), std::nullopt, std::nullopt);
+    validate_many_small_one_big(mrt, f);
+}
+
+
 
 }
