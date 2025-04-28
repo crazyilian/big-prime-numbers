@@ -3,7 +3,6 @@
 #include "common.h"
 #include "factorization_utils.h"
 #include "random.hpp"
-#include "sieve_eratosthenes.h"
 
 namespace BigPrimeLib {
 

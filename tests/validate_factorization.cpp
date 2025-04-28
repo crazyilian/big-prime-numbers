@@ -7,6 +7,7 @@
 #include "factorization/fermat_factorization.h"
 #include "factorization/pollard_p1_factorization.hpp"
 #include "factorization/pollard_rho_factorization.hpp"
+#include "factorization/dixon_factorization.h"
 
 namespace BigPrimeLib {
 
@@ -84,6 +85,7 @@ BigInt gen_big_divisors(const BigInt &max_divisor, size_t cnt, Random<> &rnd) {
 
 void validate_small(PrimeTester &t, Factorizer &f) {
     for (BigInt n = 1; n < 10000; ++n) {
+        // EXPECT_TRUE(false) << n;
         check_find_factor(n, f.find_factor(n), t);
     }
 }
@@ -215,6 +217,24 @@ TEST(pollard_p1_factorization_with_prime_test, many_small_one_big) {
     validate_many_small_one_big(mrt, f);
 }
 
+// dixon_factorization
 
+TEST(dixon_factorization_with_prime_test, small) {
+    MillerRabinPrimeTester mrt(20, Random());
+    DixonFactorizer f(mrt, 150);
+    validate_small(mrt, f);
+}
+
+TEST(dixon_factorization_with_prime_test, medium) {
+    MillerRabinPrimeTester mrt(20, Random());
+    DixonFactorizer f(mrt, 400);
+    validate_medium(mrt, f);
+}
+
+TEST(dixon_factorization_with_prime_test, many_small_one_big) {
+    MillerRabinPrimeTester mrt(20, Random());
+    DixonFactorizer f(mrt, 2000);
+    validate_many_small_one_big(mrt, f);
+}
 
 }
