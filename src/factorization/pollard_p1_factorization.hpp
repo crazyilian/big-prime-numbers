@@ -40,9 +40,11 @@ public:
                 if (a == 1) {
                     break;
                 }
-                BigInt g = Math::gcd(a - 1, n);
-                if (g != 1) {
-                    return g;
+                if (iter_i < 20 || iter_i % 20 == 0) {
+                    BigInt g = Math::gcd(a - 1, n);
+                    if (g != 1) {
+                        return g;
+                    }
                 }
             }
         }

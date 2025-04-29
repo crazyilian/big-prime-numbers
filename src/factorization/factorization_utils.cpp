@@ -24,13 +24,15 @@ void Factorizer::factorization_accumulate(const BigInt &n, std::vector<BigInt> &
         result.push_back(n);
         return;
     }
-    auto factor = find_factor(n);
-    if (!factor.has_value()) {
-        result.push_back(n);
+    BigInt factor = find_factor(n).value_or(1);
+    if (factor == 1 || factor == n) {
+        if (n > 1) {
+            result.push_back(n);
+        }
         return;
     }
-    factorization_accumulate(factor.value(), result);
-    factorization_accumulate(n / factor.value(), result);
+    factorization_accumulate(factor, result);
+    factorization_accumulate(n / factor, result);
 }
 
 

@@ -84,8 +84,10 @@ BigInt gen_big_divisors(const BigInt &max_divisor, size_t cnt, Random<> &rnd) {
 // validate
 
 void validate_small(PrimeTester &t, Factorizer &f) {
-    for (BigInt n = 1; n < 10000; ++n) {
-        // EXPECT_TRUE(false) << n;
+    for (BigInt n = 1; n < 100000; ++n) {
+        if (t.test(n) != PrimalityStatus::Composite) {
+            continue;
+        }
         check_find_factor(n, f.find_factor(n), t);
     }
 }
@@ -141,22 +143,27 @@ void validate_several_big(PrimeTester &t, Factorizer &f) {
 
 // trial_factorization
 
-TEST(trial_factorization, small_and_medium) {
+TEST(trial_factorization, small) {
     MillerRabinPrimeTester mrt(20, Random());
-    TrialFactorizer f;
+    TrialFactorizer f(mrt);
     validate_small(mrt, f);
+}
+
+TEST(trial_factorization, medium) {
+    MillerRabinPrimeTester mrt(20, Random());
+    TrialFactorizer f(mrt);
     validate_medium(mrt, f);
 }
 
 TEST(trial_factorization, many_small) {
     MillerRabinPrimeTester mrt(20, Random());
-    TrialFactorizer f;
+    TrialFactorizer f(mrt);
     validate_many_small(mrt, f);
 }
 
-TEST(trial_factorization_with_prime_test, many_small_one_big) {
+TEST(trial_factorization, many_small_one_big) {
     MillerRabinPrimeTester mrt(20, Random());
-    TrialFactorizer f(MillerRabinPrimeTester(10, Random()));
+    TrialFactorizer f(mrt);
     validate_many_small_one_big(mrt, f);
 }
 
@@ -164,13 +171,13 @@ TEST(trial_factorization_with_prime_test, many_small_one_big) {
 
 TEST(fermat_factorization, small) {
     MillerRabinPrimeTester mrt(20, Random());
-    FermatFactorizer f;
+    FermatFactorizer f(mrt);
     validate_small(mrt, f);
 }
 
 TEST(fermat_factorization, div_near_sqrt) {
     MillerRabinPrimeTester mrt(20, Random());
-    FermatFactorizer f;
+    FermatFactorizer f(mrt);
     Random rnd;
     BigInt e1000 = Math::pow(BigInt(10), 1000);
     for (size_t i = 0; i < 1000; ++i) {
@@ -183,20 +190,25 @@ TEST(fermat_factorization, div_near_sqrt) {
 
 // pollard_pho_factorization
 
-TEST(pollard_rho_factorization, small_and_medium) {
+TEST(pollard_rho_factorization, small) {
     MillerRabinPrimeTester mrt(20, Random());
-    PollardRhoFactorizer f(Random<>(), 10, 500);
+    PollardRhoFactorizer f(mrt, Random<>(), std::nullopt, std::nullopt);
     validate_small(mrt, f);
+}
+
+TEST(pollard_rho_factorization, medium) {
+    MillerRabinPrimeTester mrt(20, Random());
+    PollardRhoFactorizer f(mrt, Random<>(), std::nullopt, std::nullopt);
     validate_medium(mrt, f);
 }
 
 TEST(pollard_rho_factorization, many_small_one_big) {
     MillerRabinPrimeTester mrt(20, Random());
-    PollardRhoFactorizer f(Random<>(), 10, 1000);
+    PollardRhoFactorizer f(mrt, Random<>(), std::nullopt, std::nullopt);
     validate_many_small_one_big(mrt, f);
 }
 
-TEST(pollard_rho_factorization_with_prime_test, many_small_two_medium) {
+TEST(pollard_rho_factorization, many_small_two_medium) {
     MillerRabinPrimeTester mrt(20, Random());
     PollardRhoFactorizer f(mrt, Random<>(), std::nullopt, std::nullopt);
     validate_many_small_two_medium(mrt, f);
@@ -204,14 +216,19 @@ TEST(pollard_rho_factorization_with_prime_test, many_small_two_medium) {
 
 // pollard_p1_factorization
 
-TEST(pollard_p1_factorization, small_and_medium) {
+TEST(pollard_p1_factorization, small) {
     MillerRabinPrimeTester mrt(20, Random());
-    PollardP1Factorizer f(Random<>(), 15, 5000);
+    PollardP1Factorizer f(mrt, Random<>(), std::nullopt, 5000);
     validate_small(mrt, f);
+}
+
+TEST(pollard_p1_factorization, medium) {
+    MillerRabinPrimeTester mrt(20, Random());
+    PollardP1Factorizer f(mrt, Random<>(), std::nullopt, 1000000);
     validate_medium(mrt, f);
 }
 
-TEST(pollard_p1_factorization_with_prime_test, many_small_one_big) {
+TEST(pollard_p1_factorization, many_small_one_big) {
     MillerRabinPrimeTester mrt(20, Random());
     PollardP1Factorizer f(mrt, Random<>(), std::nullopt, std::nullopt);
     validate_many_small_one_big(mrt, f);
@@ -219,19 +236,19 @@ TEST(pollard_p1_factorization_with_prime_test, many_small_one_big) {
 
 // dixon_factorization
 
-TEST(dixon_factorization_with_prime_test, small) {
+TEST(dixon_factorization, small) {
     MillerRabinPrimeTester mrt(20, Random());
     DixonFactorizer f(mrt, 150);
     validate_small(mrt, f);
 }
 
-TEST(dixon_factorization_with_prime_test, medium) {
+TEST(dixon_factorization, medium) {
     MillerRabinPrimeTester mrt(20, Random());
-    DixonFactorizer f(mrt, 400);
+    DixonFactorizer f(mrt, 1500);
     validate_medium(mrt, f);
 }
 
-TEST(dixon_factorization_with_prime_test, many_small_one_big) {
+TEST(dixon_factorization, many_small_one_big) {
     MillerRabinPrimeTester mrt(20, Random());
     DixonFactorizer f(mrt, 2000);
     validate_many_small_one_big(mrt, f);

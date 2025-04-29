@@ -1,11 +1,15 @@
 cmake_minimum_required(VERSION 3.29)
 project(big_prime_lib)
 
+enable_testing()
+
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(Boost REQUIRED)
+
+add_subdirectory(extern/googletest)
 
 include_directories(src)
 file(GLOB src_targets src/**/*.cpp src/**/*.hpp src/*.cpp src/*.hpp)

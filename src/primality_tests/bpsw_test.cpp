@@ -7,11 +7,17 @@
 
 namespace BigPrimeLib {
 
-const std::set<BigInt> kWieferichPrimesSquare = {1194649, 12327121}; // OEIS: A001220
+const std::vector<BigInt> kWieferichPrimes = {1093, 3511}; // OEIS: A001220
 
 PrimalityStatus BPSWPrimeTester::lucas_test_wrapper(const BigInt &n) const {
-    if (known_wieferich && kWieferichPrimesSquare.contains(n)) {
-        return PrimalityStatus::Composite;
+    if (known_wieferich) {
+        for (const auto &w : kWieferichPrimes) {
+            if (n == w) {
+                return PrimalityStatus::Prime;
+            } else if (n % w == 0) {
+                return PrimalityStatus::Composite;
+            }
+        }
     }
 
     int64_t D = 5;

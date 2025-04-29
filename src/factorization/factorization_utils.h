@@ -20,7 +20,7 @@ public:
 
     std::vector<BigInt> factorization(const BigInt &n);
 
-public:
+private:
     void factorization_accumulate(const BigInt &n, std::vector<BigInt> &result);
 };
 
