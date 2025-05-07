@@ -7,8 +7,7 @@
 #include "primality_tests/lucas_lehmer_test.h"
 #include "primality_tests/lucas_lehmer_riesel_test.h"
 #include "primality_tests/proth_test.hpp"
-#include "../tests/test_utils.h"
-#include "prime_generators/iterative_search.hpp"
+#include "test_utils.h"
 
 
 namespace BigPrimeLib {

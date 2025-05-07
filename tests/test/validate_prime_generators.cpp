@@ -3,7 +3,6 @@
 #include "test_utils.h"
 #include "prime_generators/iterative_search.hpp"
 #include "primality_tests/miller_rabin_test.hpp"
-#include "primality_tests/bpsw_test.h"
 #include "prime_generators/maurer_method.hpp"
 
 namespace BigPrimeLib {
