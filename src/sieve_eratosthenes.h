@@ -1,7 +1,6 @@
 #pragma once
 
 #include "common.h"
-#include "primality_tests/primality_utils.hpp"
 
 namespace BigPrimeLib {
 
