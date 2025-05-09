@@ -14,24 +14,6 @@ namespace BigPrimeLib::Test {
 namespace {
     // utils
 
-    std::vector<BigInt> read_all_big_primes() {
-        auto big_primes = read_numbers(Filenames::BigPrimes);
-        auto big_generalized_mersenne_primes = read_numbers(Filenames::BigGeneralizedMersennePrimes);
-        auto big_proth_primes = read_numbers(Filenames::BigProthPrimes);
-        for (size_t i = 0; i < big_generalized_mersenne_primes.size(); i += 2) {
-            auto n = static_cast<uint64_t>(big_generalized_mersenne_primes[i]);
-            auto k = big_generalized_mersenne_primes[i + 1];
-            big_primes.push_back((k << n) - 1);
-        }
-        for (size_t i = 0; i < big_proth_primes.size(); i += 2) {
-            auto n = static_cast<uint64_t>(big_proth_primes[i]);
-            auto k = big_proth_primes[i + 1];
-            big_primes.push_back((k << n) + 1);
-        }
-        std::sort(big_primes.begin(), big_primes.end());
-        return big_primes;
-    }
-
     void check_find_factor(const BigInt &n, const std::optional<BigInt> &factor_opt, PrimeTesterRef t) {
         if (!factor_opt.has_value()) {
             auto status = t->test(n);
@@ -73,14 +55,6 @@ namespace {
         std::vector divisors(primes.begin(), std::upper_bound(primes.begin(), primes.end(), max_val));
         size_t ind = static_cast<size_t>(rnd.uniform(0, divisors.size() - 1));
         return divisors[ind];
-    }
-
-    BigInt gen_big_divisors(const BigInt &max_divisor, size_t cnt, Random<> &rnd) {
-        BigInt n = 1;
-        for (size_t i = 0; i < cnt; ++i) {
-            n *= gen_big_prime(max_divisor, rnd);
-        }
-        return n;
     }
 
     // validate
@@ -132,16 +106,6 @@ namespace {
         }
     }
 
-    void validate_several_big(PrimeTesterRef t, FactorizerRef f) {
-        Random rnd;
-        for (size_t cnt = 1; cnt <= 5; ++cnt) {
-            BigInt max_div = Math::pow(BigInt(10), 5000 / cnt);
-            for (size_t i = 0; i < 10; ++i) {
-                BigInt n = gen_big_divisors(max_div, cnt, rnd);
-                check_factorization(n, f->factorize(n), t);
-            }
-        }
-    }
 
     // trial_factorization
 
