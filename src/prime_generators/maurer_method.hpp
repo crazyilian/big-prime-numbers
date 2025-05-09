@@ -57,7 +57,7 @@ inline BigInt MaurerPrime::get_cert_base() const {
 
 // generation
 
-namespace _detail {
+namespace detail {
 
     template<class RandomGenerator>
     BigInt generate_prime_maurer_small_bitsize(size_t bit_size, Random<RandomGenerator> &rnd) {
@@ -101,11 +101,11 @@ MaurerPrime generate_prime_maurer_with_cert(size_t bit_size, Random<RandomGenera
     assert(bit_size > 1 && bit_margin >= 1 && bit_margin < iterative_bit_limit && iterative_bit_limit <= 64);
 
     if (bit_size <= iterative_bit_limit) {
-        return MaurerPrime(_detail::generate_prime_maurer_small_bitsize(bit_size, rnd));
+        return MaurerPrime(detail::generate_prime_maurer_small_bitsize(bit_size, rnd));
     }
-    size_t new_bit_size = _detail::generate_prime_maurer_new_bitsize(bit_size, bit_margin, rnd);
+    size_t new_bit_size = detail::generate_prime_maurer_new_bitsize(bit_size, bit_margin, rnd);
     MaurerPrime q = generate_prime_maurer_with_cert(new_bit_size, rnd, bit_margin, iterative_bit_limit);
-    auto [p, r, a] = _detail::generate_prime_maurer_find_p_r_a(bit_size, q.p, rnd);
+    auto [p, r, a] = detail::generate_prime_maurer_find_p_r_a(bit_size, q.p, rnd);
     return MaurerPrime(p, r, a, q);
 }
 
@@ -115,11 +115,11 @@ BigInt generate_prime_maurer(size_t bit_size, Random<RandomGenerator> &rnd,
     assert(bit_size > 1 && bit_margin >= 1 && bit_margin < iterative_bit_limit && iterative_bit_limit <= 64);
 
     if (bit_size <= iterative_bit_limit) {
-        return _detail::generate_prime_maurer_small_bitsize(bit_size, rnd);
+        return detail::generate_prime_maurer_small_bitsize(bit_size, rnd);
     }
-    size_t new_bit_size = _detail::generate_prime_maurer_new_bitsize(bit_size, bit_margin, rnd);
+    size_t new_bit_size = detail::generate_prime_maurer_new_bitsize(bit_size, bit_margin, rnd);
     BigInt q = generate_prime_maurer(new_bit_size, rnd, bit_margin, iterative_bit_limit);
-    auto [p, r, a] = _detail::generate_prime_maurer_find_p_r_a(bit_size, q, rnd);
+    auto [p, r, a] = detail::generate_prime_maurer_find_p_r_a(bit_size, q, rnd);
     return p;
 }
 

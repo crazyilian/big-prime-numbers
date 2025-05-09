@@ -2,7 +2,7 @@
 
 namespace BigPrimeLib {
 
-namespace _detail {
+namespace detail {
 
     template<typename T1, typename T2>
     void jacobi_iteration(T1 &a, const T2 &n, int &res) {
@@ -28,7 +28,7 @@ int jacobi(T a, T n) {
     }
     int res = 1;
     while (a != 0) {
-        _detail::jacobi_iteration(a, n, res);
+        detail::jacobi_iteration(a, n, res);
         n %= a;
         std::swap(a, n);
     }
@@ -55,7 +55,7 @@ int jacobi(T1 a, const T2 &big_n) {
     }
     T1 n;
     if (big_n > a) {
-        _detail::jacobi_iteration(a, big_n, res);
+        detail::jacobi_iteration(a, big_n, res);
         n = static_cast<T1>(big_n % a);
         std::swap(n, a);
     } else {

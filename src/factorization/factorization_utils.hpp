@@ -5,7 +5,7 @@
 
 namespace BigPrimeLib {
 
-namespace _detail {
+namespace detail {
 
     struct IFactorizer {
         template<class Base>
@@ -44,7 +44,7 @@ namespace _detail {
 
 }
 
-using Factorizer = folly::Poly<_detail::IFactorizer>;
-using FactorizerRef = folly::Poly<_detail::IFactorizer &>;
+using Factorizer = folly::Poly<detail::IFactorizer>;
+using FactorizerRef = folly::Poly<detail::IFactorizer &>;
 
 }

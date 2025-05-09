@@ -22,7 +22,7 @@ inline const char *to_string(PrimalityStatus s) {
     }
 }
 
-namespace _detail {
+namespace detail {
 
     struct IPrimeTester {
         template<class Base>
@@ -49,7 +49,7 @@ namespace _detail {
 
 }
 
-using PrimeTester = folly::Poly<_detail::IPrimeTester>;
-using PrimeTesterRef = folly::Poly<_detail::IPrimeTester &>;
+using PrimeTester = folly::Poly<detail::IPrimeTester>;
+using PrimeTesterRef = folly::Poly<detail::IPrimeTester &>;
 
 }

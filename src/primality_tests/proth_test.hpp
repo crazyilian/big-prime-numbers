@@ -18,7 +18,7 @@ inline PrimalityStatus proth_test_base(const BigInt &n, const BigInt &base) {
     }
 }
 
-namespace _detail {
+namespace detail {
 
     template<class Iterator>
     PrimalityStatus proth_test_iter(const BigInt &n, const Iterator &base_begin, const Iterator &base_end) {
@@ -44,7 +44,7 @@ public:
           on_uncertain_(assume_composite ? PrimalityStatus::Composite : PrimalityStatus::Uncertain) {}
 
     PrimalityStatus test_raw(const BigInt &n) {
-        return _detail::proth_test_iter(n, begin_, end_);
+        return detail::proth_test_iter(n, begin_, end_);
     }
 
     const PrimalityStatus &on_uncertain() const { return on_uncertain_; }
@@ -63,7 +63,7 @@ public:
 
     PrimalityStatus test_raw(const BigInt &n) {
         std::function<BigInt()> f = [this, &n]() { return rnd_.uniform(2, n - 1); };
-        return _detail::proth_test_iter(n, Iterator(f, 0), Iterator(f, times_));
+        return detail::proth_test_iter(n, Iterator(f, 0), Iterator(f, times_));
     }
 
     const PrimalityStatus &on_uncertain() const { return on_uncertain_; }

@@ -5,7 +5,7 @@
 
 namespace BigPrimeLib {
 
-namespace _detail {
+namespace detail {
 
     class BPSWPrimeTester {
     public:
@@ -22,13 +22,13 @@ namespace _detail {
 
 }
 
-class BPSWMillerPrimeTester : public _detail::BPSWPrimeTester {
+class BPSWMillerPrimeTester : public detail::BPSWPrimeTester {
 public:
     using BPSWPrimeTester::BPSWPrimeTester;
     PrimalityStatus test_raw(const BigInt &n);
 };
 
-class BPSWFermatPrimeTester : public _detail::BPSWPrimeTester {
+class BPSWFermatPrimeTester : public detail::BPSWPrimeTester {
 public:
     using BPSWPrimeTester::BPSWPrimeTester;
     PrimalityStatus test_raw(const BigInt &n);
