@@ -96,7 +96,7 @@ void validate_medium(PrimeTesterRef t, FactorizerRef f) {
     Random rnd;
     for (size_t i = 0; i < 100; ++i) {
         auto n = rnd.uniform(1, BigInt(1e12));
-        check_factorization(n, f->factorization(n), t);
+        check_factorization(n, f->factorize(n), t);
     }
 }
 
@@ -104,7 +104,7 @@ void validate_many_small(PrimeTesterRef t, FactorizerRef f) {
     Random rnd;
     for (size_t cnt_div = 10; cnt_div <= 200; cnt_div += 10) {
         BigInt n = gen_small_divisors(4000, cnt_div, rnd);
-        check_factorization(n, f->factorization(n), t);
+        check_factorization(n, f->factorize(n), t);
     }
 }
 
@@ -114,7 +114,7 @@ void validate_many_small_one_big(PrimeTesterRef t, FactorizerRef f) {
     for (size_t cnt_div = 10; cnt_div <= 100; cnt_div += 10) {
         BigInt n = gen_small_divisors(2000, cnt_div, rnd);
         n *= gen_big_prime(e1000, rnd);
-        check_factorization(n, f->factorization(n), t);
+        check_factorization(n, f->factorize(n), t);
     }
 }
 
@@ -126,7 +126,7 @@ void validate_many_small_two_medium(PrimeTesterRef t, FactorizerRef f) {
         BigInt p1 = gen_big_prime(e15, rnd);
         BigInt p2 = gen_big_prime(e15, rnd);
         n *= p1 * p2;
-        check_factorization(n, f->factorization(n), t);
+        check_factorization(n, f->factorize(n), t);
     }
 }
 
@@ -136,7 +136,7 @@ void validate_several_big(PrimeTesterRef t, FactorizerRef f) {
         BigInt max_div = Math::pow(BigInt(10), 5000 / cnt);
         for (size_t i = 0; i < 10; ++i) {
             BigInt n = gen_big_divisors(max_div, cnt, rnd);
-            check_factorization(n, f->factorization(n), t);
+            check_factorization(n, f->factorize(n), t);
         }
     }
 }

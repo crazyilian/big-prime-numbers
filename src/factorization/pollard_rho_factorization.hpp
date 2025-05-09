@@ -17,7 +17,7 @@ public:
                          std::optional<size_t> base_times, std::optional<size_t> iter_times)
         : prime_tester_(prime_tester), rnd_(rnd), base_times_(base_times), iter_times_(iter_times) {}
 
-    PrimalityStatus prime_test(const BigInt &n) {
+    PrimalityStatus primality_test(const BigInt &n) {
         return prime_tester_ ? prime_tester_->test(n) : PrimalityStatus::Uncertain;
     }
 

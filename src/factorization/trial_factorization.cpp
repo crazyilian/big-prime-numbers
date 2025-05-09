@@ -7,7 +7,7 @@ TrialFactorizer::TrialFactorizer() {}
 
 TrialFactorizer::TrialFactorizer(const PrimeTester &prime_tester) : prime_tester_(prime_tester) {}
 
-PrimalityStatus TrialFactorizer::prime_test(const BigInt &n) {
+PrimalityStatus TrialFactorizer::primality_test(const BigInt &n) {
     return prime_tester_ ? prime_tester_->test(n) : PrimalityStatus::Uncertain;
 }
 

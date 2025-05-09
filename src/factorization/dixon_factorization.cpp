@@ -7,7 +7,7 @@ DixonFactorizer::DixonFactorizer(size_t b_lim) : sieve_(b_lim) {}
 DixonFactorizer::DixonFactorizer(const PrimeTester &prime_tester, size_t b_lim)
     : prime_tester_(prime_tester), sieve_(b_lim) {}
 
-PrimalityStatus DixonFactorizer::prime_test(const BigInt &n) {
+PrimalityStatus DixonFactorizer::primality_test(const BigInt &n) {
     return prime_tester_ ? prime_tester_->test(n) : PrimalityStatus::Uncertain;
 }
 

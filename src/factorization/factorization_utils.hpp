@@ -13,7 +13,7 @@ namespace _detail {
         private:
             void accumulate_factorization(const BigInt &n, std::vector<BigInt> &result) {
                 if (n <= 1) {
-                } else if (n <= 3 || prime_test(n) == PrimalityStatus::Prime) {
+                } else if (n <= 3 || primality_test(n) == PrimalityStatus::Prime) {
                     result.push_back(n);
                 } else {
                     BigInt factor = find_factor(n).value_or(1);
@@ -35,11 +35,11 @@ namespace _detail {
                 return result;
             }
             std::optional<BigInt> find_factor(const BigInt &n) { return folly::poly_call<0>(*this, n); }
-            PrimalityStatus prime_test(const BigInt &n) { return folly::poly_call<1>(*this, n); }
+            PrimalityStatus primality_test(const BigInt &n) { return folly::poly_call<1>(*this, n); }
         };
 
         template<class T>
-        using Members = folly::PolyMembers<&T::find_factor, &T::prime_test>;
+        using Members = folly::PolyMembers<&T::find_factor, &T::primality_test>;
     };
 
 }

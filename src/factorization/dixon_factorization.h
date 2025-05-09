@@ -11,7 +11,7 @@ class DixonFactorizer {
 public:
     explicit DixonFactorizer(size_t b_lim);
     DixonFactorizer(const PrimeTester &prime_tester, size_t b_lim);
-    PrimalityStatus prime_test(const BigInt &n);
+    PrimalityStatus primality_test(const BigInt &n);
     std::optional<BigInt> find_factor(const BigInt &n);
 
 private:
