@@ -2,7 +2,7 @@
 #include "test_utils.h"
 #include "except.h"
 
-namespace BigPrimeLib {
+namespace BigPrimeLib::Test {
 
 std::vector<BigInt> read_numbers(const char *path) {
     std::ifstream file(path);
