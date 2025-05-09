@@ -11,7 +11,7 @@ namespace _detail {
         template<class Base>
         struct Interface : Base {
         private:
-            void factorization_accumulate(const BigInt &n, std::vector<BigInt> &result) {
+            void accumulate_factorization(const BigInt &n, std::vector<BigInt> &result) {
                 if (n <= 1) {
                 } else if (n <= 3 || prime_test(n) == PrimalityStatus::Prime) {
                     result.push_back(n);
@@ -23,15 +23,15 @@ namespace _detail {
                         }
                         return;
                     }
-                    factorization_accumulate(factor, result);
-                    factorization_accumulate(n / factor, result);
+                    accumulate_factorization(factor, result);
+                    accumulate_factorization(n / factor, result);
                 }
             }
 
         public:
-            std::vector<BigInt> factorization(const BigInt &n) {
+            std::vector<BigInt> factorize(const BigInt &n) {
                 std::vector<BigInt> result;
-                factorization_accumulate(n, result);
+                accumulate_factorization(n, result);
                 return result;
             }
             std::optional<BigInt> find_factor(const BigInt &n) { return folly::poly_call<0>(*this, n); }
