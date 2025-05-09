@@ -1,21 +1,16 @@
 #include "fermat_factorization.h"
-#include "factorization_utils.h"
 
 namespace BigPrimeLib {
 
 FermatFactorizer::FermatFactorizer() {}
 
-FermatFactorizer::FermatFactorizer(const PrimeTester &prime_tester) : Factorizer(prime_tester) {}
+FermatFactorizer::FermatFactorizer(const PrimeTester &prime_tester) : prime_tester_(prime_tester) {}
 
-std::unique_ptr<Factorizer> FermatFactorizer::clone() const {
-    return std::make_unique<FermatFactorizer>(*this);
+PrimalityStatus FermatFactorizer::prime_test(const BigInt &n) {
+    return prime_tester_ ? prime_tester_->test(n) : PrimalityStatus::Uncertain;
 }
 
 std::optional<BigInt> FermatFactorizer::find_factor(const BigInt &n) {
-    assert(n > 0);
-    if (n <= 3) {
-        return std::nullopt;
-    }
     if (n % 2 == 0) {
         return 2;
     }

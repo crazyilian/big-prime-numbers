@@ -1,41 +1,33 @@
 #pragma once
 
 #include "common.h"
-#include "factorization_utils.h"
+#include "factorization_utils.hpp"
 #include "random.hpp"
 
 namespace BigPrimeLib {
 
 template<class RandomGenerator>
-class PollardP1Factorizer : public Factorizer {
+class PollardP1Factorizer {
 public:
-    Random<RandomGenerator> rnd;
-    std::optional<size_t> base_times, iter_times;
+    PollardP1Factorizer(const Random<RandomGenerator> &rnd, std::optional<size_t> base_times,
+                        std::optional<size_t> iter_times)
+        : rnd_(rnd), base_times_(base_times), iter_times_(iter_times) {}
 
-public:
-    PollardP1Factorizer(Random<RandomGenerator> rnd, std::optional<size_t> base_times, std::optional<size_t> iter_times)
-        : rnd(rnd), base_times(base_times), iter_times(iter_times) {}
-
-    PollardP1Factorizer(const PrimeTester &prime_tester, Random<RandomGenerator> rnd,
+    PollardP1Factorizer(const PrimeTester &prime_tester, const Random<RandomGenerator> &rnd,
                         std::optional<size_t> base_times, std::optional<size_t> iter_times)
-        : Factorizer(prime_tester), rnd(rnd), base_times(base_times), iter_times(iter_times) {}
+        : prime_tester_(prime_tester), rnd_(rnd), base_times_(base_times), iter_times_(iter_times) {}
 
-    std::unique_ptr<Factorizer> clone() const override {
-        return std::make_unique<PollardP1Factorizer>(*this);
+    PrimalityStatus prime_test(const BigInt &n) {
+        return prime_tester_ ? prime_tester_->test(n) : PrimalityStatus::Uncertain;
     }
 
-    std::optional<BigInt> find_factor(const BigInt &n) override {
-        assert(n > 0);
-        if (n <= 3) {
-            return std::nullopt;
-        }
+    std::optional<BigInt> find_factor(const BigInt &n) {
         if (n % 2 == 0) {
             return 2;
         }
-
-        for (size_t base_i = 0; !base_times.has_value() || base_i < base_times.value(); ++base_i) {
-            BigInt a = rnd.uniform(2, n - 2);
-            for (size_t iter_i = 0; !iter_times.has_value() || iter_i < iter_times.value(); ++iter_i) {
+        for (size_t base_i = 0; !base_times_.has_value() || base_i < base_times_.value(); ++base_i) {
+            BigInt a = rnd_.uniform(2, n - 2);
+            for (size_t iter_i = 0; !iter_times_.has_value() || iter_i < iter_times_.value(); ++iter_i) {
                 a = Math::powm(a, iter_i + 1, n);
                 if (a == 1) {
                     break;
@@ -50,6 +42,11 @@ public:
         }
         return std::nullopt;
     }
+
+private:
+    std::optional<PrimeTester> prime_tester_;
+    Random<RandomGenerator> rnd_;
+    std::optional<size_t> base_times_, iter_times_;
 };
 
 }

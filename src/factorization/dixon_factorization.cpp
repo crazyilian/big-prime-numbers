@@ -2,19 +2,20 @@
 
 namespace BigPrimeLib {
 
-DixonFactorizer::DixonFactorizer(size_t b_lim) : sieve(b_lim) {}
-DixonFactorizer::DixonFactorizer(const PrimeTester &prime_tester, size_t b_lim)
-    : Factorizer(prime_tester), sieve(b_lim) {}
+DixonFactorizer::DixonFactorizer(size_t b_lim) : sieve_(b_lim) {}
 
-std::unique_ptr<Factorizer> DixonFactorizer::clone() const {
-    return std::make_unique<DixonFactorizer>(*this);
+DixonFactorizer::DixonFactorizer(const PrimeTester &prime_tester, size_t b_lim)
+    : prime_tester_(prime_tester), sieve_(b_lim) {}
+
+PrimalityStatus DixonFactorizer::prime_test(const BigInt &n) {
+    return prime_tester_ ? prime_tester_->test(n) : PrimalityStatus::Uncertain;
 }
 
 std::optional<std::vector<size_t>> DixonFactorizer::factor_over_base(BigInt x) {
-    std::vector<size_t> exps(sieve.primes.size());
-    for (size_t i = 0; i < sieve.primes.size(); ++i) {
-        while (x % sieve.primes[i] == 0) {
-            x /= sieve.primes[i];
+    std::vector<size_t> exps(sieve_.primes.size());
+    for (size_t i = 0; i < sieve_.primes.size(); ++i) {
+        while (x % sieve_.primes[i] == 0) {
+            x /= sieve_.primes[i];
             exps[i]++;
         }
     }
@@ -85,11 +86,7 @@ std::vector<boost::dynamic_bitset<>> DixonFactorizer::nullspace_mod2(std::vector
 }
 
 std::optional<BigInt> DixonFactorizer::find_factor(const BigInt &n) {
-    assert(n > 0);
-    if (n <= 3) {
-        return std::nullopt;
-    }
-    for (auto p : sieve.primes) {
+    for (auto p : sieve_.primes) {
         if (n == p) {
             return std::nullopt;
         }
@@ -103,7 +100,7 @@ std::optional<BigInt> DixonFactorizer::find_factor(const BigInt &n) {
         return root;
     }
 
-    size_t np = sieve.primes.size();
+    size_t np = sieve_.primes.size();
     std::vector<Rels> rels;
     rels.reserve(np + 3);
     for (size_t k = 1; rels.size() < np + 3 && root + k < n; ++k) {
@@ -153,7 +150,7 @@ std::optional<BigInt> DixonFactorizer::find_factor(const BigInt &n) {
         }
         BigInt b = 1;
         for (size_t i = 0; i < np; ++i) {
-            BigInt p = sieve.primes[i];
+            BigInt p = sieve_.primes[i];
             b = b * Math::powm(p, exp_sum[i] / 2, n) % n;
         }
         auto d = Math::gcd(a - b, n);

@@ -5,11 +5,14 @@
 
 namespace BigPrimeLib {
 
-class TrialPrimeTester : public PrimeTester {
+class TrialPrimeTester {
 public:
     TrialPrimeTester();
-    PrimalityStatus test_raw(const BigInt &n) override;
-    std::unique_ptr<PrimeTester> clone() const override;
+    PrimalityStatus test_raw(const BigInt &n);
+    const PrimalityStatus &on_uncertain() const;
+
+private:
+    static constexpr PrimalityStatus on_uncertain_ = PrimalityStatus::Uncertain;
 };
 
 

@@ -2,12 +2,12 @@
 
 #include <boost/iterator/function_input_iterator.hpp>
 #include "common.h"
-#include "random.hpp"
 #include "primality_utils.hpp"
+#include "random.hpp"
 
 namespace BigPrimeLib {
 
-inline PrimalityStatus proth_prime_test_base(const BigInt &n, const BigInt &base) {
+inline PrimalityStatus proth_test_base(const BigInt &n, const BigInt &base) {
     BigInt b = Math::powm(base, (n - 1) >> 1, n);
     if (b == n - 1) {
         return PrimalityStatus::Prime;
@@ -18,63 +18,61 @@ inline PrimalityStatus proth_prime_test_base(const BigInt &n, const BigInt &base
     }
 }
 
-template<class Iterator>
-class ProthPrimeTesterIter : public PrimeTesterIter<Iterator> {
-public:
-    explicit ProthPrimeTesterIter(bool assume_composite = true)
-        : PrimeTesterIter<Iterator>(assume_composite ? PrimalityStatus::Composite : PrimalityStatus::Uncertain) {}
-    ProthPrimeTesterIter(Iterator default_begin, Iterator default_end, bool assume_composite = true)
-        : PrimeTesterIter<Iterator>(default_begin, default_end,
-                                    assume_composite ? PrimalityStatus::Composite : PrimalityStatus::Uncertain) {}
+namespace _detail {
 
-    std::unique_ptr<PrimeTester> clone() const override {
-        return std::make_unique<ProthPrimeTesterIter>(*this);
-    }
-
-    PrimalityStatus test_raw(const BigInt &n, Iterator base_begin, Iterator base_end) override {
-        if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {
-            return status;
-        }
+    template<class Iterator>
+    PrimalityStatus proth_test_iter(const BigInt &n, const Iterator &base_begin, const Iterator &base_end) {
+        // n = k * 2^s + 1, k<2^s
         assert(Math::msb(n - 1) < Math::lsb(n - 1) * 2);
         for (auto it = base_begin; it != base_end; ++it) {
             BigInt base = *it;
-            auto status = proth_prime_test_base(n, base);
+            auto status = proth_test_base(n, base);
             if (status != PrimalityStatus::Uncertain) {
                 return status;
             }
         }
         return PrimalityStatus::Uncertain;
     }
+
+}
+
+template<class Iterator>
+class ProthPrimeTesterIter {
+public:
+    ProthPrimeTesterIter(const Iterator &begin, const Iterator &end, bool assume_composite = true)
+        : begin_(begin), end_(end),
+          on_uncertain_(assume_composite ? PrimalityStatus::Composite : PrimalityStatus::Uncertain) {}
+
+    PrimalityStatus test_raw(const BigInt &n) {
+        return _detail::proth_test_iter(n, begin_, end_);
+    }
+
+    const PrimalityStatus &on_uncertain() const { return on_uncertain_; }
+
+private:
+    PrimalityStatus on_uncertain_;
+    Iterator begin_, end_;
 };
 
 template<class RandomGenerator>
-class ProthPrimeTester : public PrimeTester {
+class ProthPrimeTester {
 public:
-    size_t times;
-    Random<RandomGenerator> rnd;
+    ProthPrimeTester(size_t times, const Random<RandomGenerator> &rnd, bool assume_composite = true)
+        : times_(times), rnd_(rnd),
+          on_uncertain_(assume_composite ? PrimalityStatus::Prime : PrimalityStatus::Uncertain) {}
 
-public:
-    ProthPrimeTester(size_t times, Random<RandomGenerator> rnd, bool assume_composite = true)
-        : PrimeTester(assume_composite ? PrimalityStatus::Composite : PrimalityStatus::Uncertain),
-          times(times), rnd(rnd) {}
-
-    std::unique_ptr<PrimeTester> clone() const override {
-        return std::make_unique<ProthPrimeTester>(*this);
+    PrimalityStatus test_raw(const BigInt &n) {
+        std::function<BigInt()> f = [this, &n]() { return rnd_.uniform(2, n - 1); };
+        return _detail::proth_test_iter(n, Iterator(f, 0), Iterator(f, times_));
     }
 
-    PrimalityStatus test_raw(const BigInt &n) override {
-        // n = k*2^s+1, k<2^s
-        assert(n > 2);
-        if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {
-            return status;
-        }
-        std::function<BigInt()> f = [this, &n]() { return rnd.uniform(2, n - 1); };
-        return tester_iter_.test(n, Iterator(f, 0), Iterator(f, times));
-    }
+    const PrimalityStatus &on_uncertain() const { return on_uncertain_; }
 
 private:
     using Iterator = boost::function_input_iterator<std::function<BigInt()>, size_t>;
-    ProthPrimeTesterIter<Iterator> tester_iter_;
+    PrimalityStatus on_uncertain_;
+    size_t times_;
+    Random<RandomGenerator> rnd_;
 };
 
 }

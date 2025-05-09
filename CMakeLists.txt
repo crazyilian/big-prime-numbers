@@ -7,6 +7,8 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+find_package(folly REQUIRED)
+find_package(glog REQUIRED)
 find_package(Boost REQUIRED)
 
 add_subdirectory(extern/googletest)
@@ -29,7 +31,7 @@ elseif (MSVC)
 endif ()
 
 target_include_directories(big_prime_lib PUBLIC ${Boost_INCLUDE_DIRS})
-target_link_libraries(big_prime_lib PRIVATE gmp)
+target_link_libraries(big_prime_lib PRIVATE gmp Folly::folly)
 
 add_subdirectory(example)
 add_subdirectory(tests)

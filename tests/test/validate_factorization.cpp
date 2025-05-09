@@ -31,9 +31,9 @@ std::vector<BigInt> read_all_big_primes() {
     return big_primes;
 }
 
-void check_find_factor(const BigInt &n, const std::optional<BigInt> &factor_opt, PrimeTester &t) {
+void check_find_factor(const BigInt &n, const std::optional<BigInt> &factor_opt, PrimeTesterRef t) {
     if (!factor_opt.has_value()) {
-        auto status = t.test(n);
+        auto status = t->test(n);
         EXPECT_TRUE(status != PrimalityStatus::Composite) << "Factor not found for " << to_string(status) << ' ' << n;
         return;
     }
@@ -42,10 +42,10 @@ void check_find_factor(const BigInt &n, const std::optional<BigInt> &factor_opt,
     EXPECT_TRUE(n % factor == 0) << "Number " << factor << " is not factor of " << n;
 }
 
-void check_factorization(const BigInt &n, const std::vector<BigInt> &factors, PrimeTester &t) {
+void check_factorization(const BigInt &n, const std::vector<BigInt> &factors, PrimeTesterRef t) {
     BigInt x = 1;
     for (auto &p : factors) {
-        auto status = t.test(p);
+        auto status = t->test(p);
         EXPECT_TRUE(status == PrimalityStatus::Prime) << "Factorization of " << n << " contains "
                 << to_string(status) << ' ' << p;
         x *= p;
@@ -83,42 +83,42 @@ BigInt gen_big_divisors(const BigInt &max_divisor, size_t cnt, Random<> &rnd) {
 
 // validate
 
-void validate_small(PrimeTester &t, Factorizer &f) {
+void validate_small(PrimeTesterRef t, FactorizerRef f) {
     for (BigInt n = 1; n < 100000; ++n) {
-        if (t.test(n) != PrimalityStatus::Composite) {
+        if (t->test(n) != PrimalityStatus::Composite) {
             continue;
         }
-        check_find_factor(n, f.find_factor(n), t);
+        check_find_factor(n, f->find_factor(n), t);
     }
 }
 
-void validate_medium(PrimeTester &t, Factorizer &f) {
+void validate_medium(PrimeTesterRef t, FactorizerRef f) {
     Random rnd;
     for (size_t i = 0; i < 100; ++i) {
         auto n = rnd.uniform(1, BigInt(1e12));
-        check_factorization(n, f.factorization(n), t);
+        check_factorization(n, f->factorization(n), t);
     }
 }
 
-void validate_many_small(PrimeTester &t, Factorizer &f) {
+void validate_many_small(PrimeTesterRef t, FactorizerRef f) {
     Random rnd;
     for (size_t cnt_div = 10; cnt_div <= 200; cnt_div += 10) {
         BigInt n = gen_small_divisors(4000, cnt_div, rnd);
-        check_factorization(n, f.factorization(n), t);
+        check_factorization(n, f->factorization(n), t);
     }
 }
 
-void validate_many_small_one_big(PrimeTester &t, Factorizer &f) {
+void validate_many_small_one_big(PrimeTesterRef t, FactorizerRef f) {
     Random rnd;
     BigInt e1000 = Math::pow(BigInt(10), 1000);
     for (size_t cnt_div = 10; cnt_div <= 100; cnt_div += 10) {
         BigInt n = gen_small_divisors(2000, cnt_div, rnd);
         n *= gen_big_prime(e1000, rnd);
-        check_factorization(n, f.factorization(n), t);
+        check_factorization(n, f->factorization(n), t);
     }
 }
 
-void validate_many_small_two_medium(PrimeTester &t, Factorizer &f) {
+void validate_many_small_two_medium(PrimeTesterRef t, FactorizerRef f) {
     Random rnd;
     BigInt e15 = Math::pow(BigInt(10), 15);
     for (size_t cnt_div = 10; cnt_div <= 100; cnt_div += 5) {
@@ -126,17 +126,17 @@ void validate_many_small_two_medium(PrimeTester &t, Factorizer &f) {
         BigInt p1 = gen_big_prime(e15, rnd);
         BigInt p2 = gen_big_prime(e15, rnd);
         n *= p1 * p2;
-        check_factorization(n, f.factorization(n), t);
+        check_factorization(n, f->factorization(n), t);
     }
 }
 
-void validate_several_big(PrimeTester &t, Factorizer &f) {
+void validate_several_big(PrimeTesterRef t, FactorizerRef f) {
     Random rnd;
     for (size_t cnt = 1; cnt <= 5; ++cnt) {
         BigInt max_div = Math::pow(BigInt(10), 5000 / cnt);
         for (size_t i = 0; i < 10; ++i) {
             BigInt n = gen_big_divisors(max_div, cnt, rnd);
-            check_factorization(n, f.factorization(n), t);
+            check_factorization(n, f->factorization(n), t);
         }
     }
 }

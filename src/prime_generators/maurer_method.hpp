@@ -63,8 +63,8 @@ namespace _detail {
 
     template<class RandomGenerator>
     BigInt generate_prime_maurer_small_bitsize(size_t bit_size, Random<RandomGenerator> &rnd) {
-        MillerRabinPrimeTesterIter prime_tester(kMillerRabinDeterministicBasesU64.begin(),
-                                                kMillerRabinDeterministicBasesU64.end());
+        PrimeTester prime_tester = MillerRabinPrimeTesterIter(kMillerRabinDeterministicBasesU64.begin(),
+                                                              kMillerRabinDeterministicBasesU64.end());
         auto p = generate_prime_in_range(BigInt(1) << (bit_size - 1), (BigInt(1) << bit_size) - 1, rnd, prime_tester);
         return p.value();
     }

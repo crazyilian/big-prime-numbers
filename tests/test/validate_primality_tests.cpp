@@ -12,7 +12,7 @@
 
 namespace BigPrimeLib {
 
-void validate_on_small_primes(const std::unordered_set<BigInt> &skip, PrimeTester &prime_tester) {
+void validate_on_small_primes(const std::unordered_set<BigInt> &skip, PrimeTesterRef prime_tester) {
     std::vector<BigInt> small_primes = read_numbers(Filenames::SmallPrimes);
     std::unordered_set<BigInt> small_primes_set(small_primes.begin(), small_primes.end());
 
@@ -21,7 +21,7 @@ void validate_on_small_primes(const std::unordered_set<BigInt> &skip, PrimeTeste
             continue;
         }
         bool is_prime = small_primes_set.contains(x);
-        PrimalityStatus out = prime_tester.test(x);
+        PrimalityStatus out = prime_tester->test(x);
         if (is_prime) {
             EXPECT_TRUE(out == PrimalityStatus::Prime)
                     << "Prime " << x << " marked as " << to_string(out);
@@ -32,22 +32,22 @@ void validate_on_small_primes(const std::unordered_set<BigInt> &skip, PrimeTeste
     }
 }
 
-void validate_on_big_primes(PrimeTester &prime_tester) {
+void validate_on_big_primes(PrimeTesterRef prime_tester) {
     std::vector<BigInt> big_primes = read_numbers(Filenames::BigPrimes);
 
     for (const BigInt &x : big_primes) {
-        PrimalityStatus out = prime_tester.test(x);
+        PrimalityStatus out = prime_tester->test(x);
         EXPECT_TRUE(out == PrimalityStatus::Prime) << "Prime " << x << " marked as " << to_string(out);
     }
 }
 
-void validate_on_big_product_two_primes(PrimeTester &prime_tester) {
+void validate_on_big_product_two_primes(PrimeTesterRef prime_tester) {
     std::vector<BigInt> big_primes = read_numbers(Filenames::BigPrimes);
 
     for (size_t i = 0; i < big_primes.size(); ++i) {
         for (size_t j = i; j < big_primes.size(); ++j) {
             BigInt x = big_primes[i] * big_primes[j];
-            PrimalityStatus out = prime_tester.test(x);
+            PrimalityStatus out = prime_tester->test(x);
             EXPECT_TRUE(out == PrimalityStatus::Composite)
                 << "Composite " << big_primes[i] << "*" << big_primes[j] << " marked as " << to_string(out);
         }
@@ -151,7 +151,7 @@ TEST(miller_rabin_prime_test_iter, big_product_two_primes) {
 // lucas_lehmer_prime_test
 
 TEST(lucas_lehmer_prime_test, small_mersenne) {
-    LucasLehmerPrimeTester t;
+    PrimeTester t = LucasLehmerPrimeTester();
     auto small_primes = read_numbers(Filenames::SmallPrimes);
     auto mersenne_primes = read_numbers(Filenames::MersennePrimes);
     std::set<BigInt> mersenne_primes_set(mersenne_primes.begin(), mersenne_primes.end());
@@ -173,8 +173,8 @@ TEST(lucas_lehmer_prime_test, small_mersenne) {
 // lucas_lehmer_riesel_prime_test
 
 TEST(lucas_lehmer_riesel_prime_test, small_generalized_mersenne) {
-    LucasLehmerRieselPrimeTester t;
-    MillerRabinPrimeTester mrt(20, Random());
+    PrimeTester t = LucasLehmerRieselPrimeTester();
+    PrimeTester mrt = MillerRabinPrimeTester(20, Random());
     for (uint64_t n = 1; n < 100; ++n) {
         for (uint64_t k = 1; k < 200 && (n >= 10 || k < (1 << n)); ++k) {
             // 2^n > k
@@ -189,8 +189,8 @@ TEST(lucas_lehmer_riesel_prime_test, small_generalized_mersenne) {
 }
 
 TEST(lucas_lehmer_riesel_prime_test, big_generalized_mersenne_random) {
-    LucasLehmerRieselPrimeTester t;
-    MillerRabinPrimeTester mrt(20, Random());
+    PrimeTester t = LucasLehmerRieselPrimeTester();
+    PrimeTester mrt = MillerRabinPrimeTester(20, Random());
     Random rnd(42);
     for (size_t i = 0; i < 10; ++i) {
         auto n = static_cast<uint64_t>(rnd.uniform(1, 5000));
@@ -205,7 +205,7 @@ TEST(lucas_lehmer_riesel_prime_test, big_generalized_mersenne_random) {
 }
 
 TEST(lucas_lehmer_riesel_prime_test, big_generalized_mersenne_primes) {
-    LucasLehmerRieselPrimeTester t;
+    PrimeTester t = LucasLehmerRieselPrimeTester();
     auto numbers = read_numbers(Filenames::BigGeneralizedMersennePrimes);
     for (size_t i = 0; i < numbers.size(); i += 2) {
         auto n = static_cast<uint64_t>(numbers[i]);
@@ -236,7 +236,7 @@ TEST(bpsw_miller_prime_test, big_product_two_primes) {
 }
 
 TEST(bpsw_miller_prime_test, small_squares) {
-    BPSWMillerPrimeTester t(true, false);
+    PrimeTester t = BPSWMillerPrimeTester(true, false);
     for (BigInt x = 2; x < 300000; ++x) {
         auto status = t.test(x * x);
         EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << "^2 marked as " << to_string(status);
@@ -244,7 +244,7 @@ TEST(bpsw_miller_prime_test, small_squares) {
 }
 
 TEST(bpsw_miller_prime_test, wieferich_combinations) {
-    BPSWMillerPrimeTester t(true, false);
+    PrimeTester t = BPSWMillerPrimeTester(true, false);
     BigInt w1 = 1093;
     BigInt w2 = 3511;
     for (size_t i = 0; i < 20; ++i) {
@@ -278,7 +278,7 @@ TEST(bpsw_miller_prime_test_no_wieferich, big_product_two_primes) {
 }
 
 TEST(bpsw_miller_prime_test_no_wieferich, small_squares) {
-    BPSWMillerPrimeTester t(false, false);
+    PrimeTester t = BPSWMillerPrimeTester(false, false);
     for (BigInt x = 2; x < 300000; ++x) {
         auto status = t.test(x * x);
         EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << "^2 marked as " << to_string(status);
@@ -303,7 +303,7 @@ TEST(bpsw_miller_prime_test_stronger_lucas, big_product_two_primes) {
 }
 
 TEST(bpsw_miller_prime_test_stronger_lucas, small_squares) {
-    BPSWMillerPrimeTester t(true, true);
+    PrimeTester t = BPSWMillerPrimeTester(true, true);
     for (BigInt x = 2; x < 300000; ++x) {
         auto status = t.test(x * x);
         EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << "^2 marked as " << to_string(status);
@@ -328,7 +328,7 @@ TEST(bpsw_fermat_prime_test, big_product_two_primes) {
 }
 
 TEST(bpsw_fermat_prime_test, small_squares) {
-    BPSWFermatPrimeTester t(true, false);
+    PrimeTester t = BPSWFermatPrimeTester(true, false);
     for (BigInt x = 2; x < 300000; ++x) {
         auto status = t.test(x * x);
         EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << "^2 marked as " << to_string(status);
@@ -336,7 +336,7 @@ TEST(bpsw_fermat_prime_test, small_squares) {
 }
 
 TEST(bpsw_fermat_prime_test, wieferich_combinations) {
-    BPSWFermatPrimeTester t(true, false);
+    PrimeTester t = BPSWFermatPrimeTester(true, false);
     BigInt w1 = 1093;
     BigInt w2 = 3511;
     for (size_t i = 0; i < 20; ++i) {
@@ -370,7 +370,7 @@ TEST(bpsw_fermat_prime_test_no_wieferich, big_product_two_primes) {
 }
 
 TEST(bpsw_fermat_prime_test_no_wieferich, small_squares) {
-    BPSWFermatPrimeTester t(false, false);
+    PrimeTester t = BPSWFermatPrimeTester(false, false);
     for (BigInt x = 2; x < 300000; ++x) {
         auto status = t.test(x * x);
         EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << "^2 marked as " << to_string(status);
@@ -395,7 +395,7 @@ TEST(bpsw_fermat_prime_test_stronger_lucas, big_product_two_primes) {
 }
 
 TEST(bpsw_fermat_prime_test_stronger_lucas, small_squares) {
-    BPSWFermatPrimeTester t(true, true);
+    PrimeTester t = BPSWFermatPrimeTester(true, true);
     for (BigInt x = 2; x < 300000; ++x) {
         auto status = t.test(x * x);
         EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << "^2 marked as " << to_string(status);
@@ -405,8 +405,8 @@ TEST(bpsw_fermat_prime_test_stronger_lucas, small_squares) {
 // proth_prime_test
 
 TEST(proth_prime_test, small_proth) {
-    ProthPrimeTester t(20, Random());
-    MillerRabinPrimeTester mrt(20, Random());
+    PrimeTester t = ProthPrimeTester(20, Random());
+    PrimeTester mrt = MillerRabinPrimeTester(20, Random());
     for (uint64_t n = 1; n < 100; ++n) {
         for (uint64_t k = 1; k < 200 && (n >= 10 || k < (1 << n)); ++k) {
             // 2^n > k
@@ -421,8 +421,8 @@ TEST(proth_prime_test, small_proth) {
 }
 
 TEST(proth_prime_test, big_proth_random) {
-    ProthPrimeTester t(20, Random());
-    MillerRabinPrimeTester mrt(20, Random());
+    PrimeTester t = ProthPrimeTester(20, Random());
+    PrimeTester mrt = MillerRabinPrimeTester(20, Random());
     Random rnd(42);
     for (size_t i = 0; i < 10; ++i) {
         auto n = static_cast<uint64_t>(rnd.uniform(1, 5000));

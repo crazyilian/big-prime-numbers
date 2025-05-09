@@ -5,29 +5,33 @@
 
 namespace BigPrimeLib {
 
-class BPSWPrimeTester : public PrimeTester {
-public:
-    bool known_wieferich, stronger_lucas;
+namespace _detail {
 
-public:
-    explicit BPSWPrimeTester(bool known_wieferich = true, bool stronger_lucas = false, bool assume_prime = true);
+    class BPSWPrimeTester {
+    public:
+        explicit BPSWPrimeTester(bool known_wieferich = true, bool stronger_lucas = false, bool assume_prime = true);
+        const PrimalityStatus &on_uncertain() const;
 
-protected:
-    PrimalityStatus lucas_test_wrapper(const BigInt &n) const;
-};
+    protected:
+        PrimalityStatus lucas_test_raw(const BigInt &n) const;
 
-class BPSWMillerPrimeTester : public BPSWPrimeTester {
+    private:
+        PrimalityStatus on_uncertain_;
+        bool known_wieferich_, stronger_lucas_;
+    };
+
+}
+
+class BPSWMillerPrimeTester : public _detail::BPSWPrimeTester {
 public:
     using BPSWPrimeTester::BPSWPrimeTester;
-    PrimalityStatus test_raw(const BigInt &n) override;
-    std::unique_ptr<PrimeTester> clone() const override;
+    PrimalityStatus test_raw(const BigInt &n);
 };
 
-class BPSWFermatPrimeTester : public BPSWPrimeTester {
+class BPSWFermatPrimeTester : public _detail::BPSWPrimeTester {
 public:
     using BPSWPrimeTester::BPSWPrimeTester;
-    PrimalityStatus test_raw(const BigInt &n) override;
-    std::unique_ptr<PrimeTester> clone() const override;
+    PrimalityStatus test_raw(const BigInt &n);
 };
 
 }

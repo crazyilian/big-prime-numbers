@@ -9,8 +9,8 @@ namespace BigPrimeLib {
 
 const std::vector<BigInt> kWieferichPrimes = {1093, 3511}; // OEIS: A001220
 
-PrimalityStatus BPSWPrimeTester::lucas_test_wrapper(const BigInt &n) const {
-    if (known_wieferich) {
+PrimalityStatus _detail::BPSWPrimeTester::lucas_test_raw(const BigInt &n) const {
+    if (known_wieferich_) {
         for (const auto &w : kWieferichPrimes) {
             if (n == w) {
                 return PrimalityStatus::Prime;
@@ -33,7 +33,7 @@ PrimalityStatus BPSWPrimeTester::lucas_test_wrapper(const BigInt &n) const {
         } else {
             D = -D + 2;
         }
-        if (D == 17 && !known_wieferich && mpz_perfect_square_p(n.backend().data())) {
+        if (D == 17 && !known_wieferich_ && mpz_perfect_square_p(n.backend().data())) {
             return PrimalityStatus::Composite;
         }
     }
@@ -44,51 +44,35 @@ PrimalityStatus BPSWPrimeTester::lucas_test_wrapper(const BigInt &n) const {
         p = q = 5;
     }
 
-    if (!stronger_lucas) {
+    if (!stronger_lucas_) {
         return strong_lucas_test(n, p, q, -1);
     } else {
         return stronger_lucas_test(n, p, q, -1);
     }
 }
 
-BPSWPrimeTester::BPSWPrimeTester(bool known_wieferich, bool stronger_lucas, bool assume_prime)
-    : PrimeTester(assume_prime ? PrimalityStatus::Prime : PrimalityStatus::Uncertain),
-      known_wieferich(known_wieferich), stronger_lucas(stronger_lucas) {}
+_detail::BPSWPrimeTester::BPSWPrimeTester(bool known_wieferich, bool stronger_lucas, bool assume_prime)
+    : on_uncertain_(assume_prime ? PrimalityStatus::Prime : PrimalityStatus::Uncertain),
+      known_wieferich_(known_wieferich), stronger_lucas_(stronger_lucas) {}
+
+const PrimalityStatus &_detail::BPSWPrimeTester::on_uncertain() const {
+    return on_uncertain_;
+}
 
 PrimalityStatus BPSWMillerPrimeTester::test_raw(const BigInt &n) {
-    if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {
-        return status;
-    } else if (n % 2 == 0) {
-        return PrimalityStatus::Composite;
-    }
-
     size_t s = Math::lsb(n - 1);
     BigInt t = n >> s;
     if (auto status = miller_rabin_test_base(n, s, t, 2); status != PrimalityStatus::Uncertain) {
         return status;
     }
-
-    return lucas_test_wrapper(n);
-}
-
-std::unique_ptr<PrimeTester> BPSWMillerPrimeTester::clone() const {
-    return std::make_unique<BPSWMillerPrimeTester>(*this);
+    return lucas_test_raw(n);
 }
 
 PrimalityStatus BPSWFermatPrimeTester::test_raw(const BigInt &n) {
-    if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {
-        return status;
-    } else if (n % 2 == 0) {
-        return PrimalityStatus::Composite;
-    } else if (status = fermat_test_base(n, 2); status != PrimalityStatus::Uncertain) {
+    if (auto status = fermat_test_base(n, 2); status != PrimalityStatus::Uncertain) {
         return status;
     }
-
-    return lucas_test_wrapper(n);
-}
-
-std::unique_ptr<PrimeTester> BPSWFermatPrimeTester::clone() const {
-    return std::make_unique<BPSWFermatPrimeTester>(*this);
+    return lucas_test_raw(n);
 }
 
 }

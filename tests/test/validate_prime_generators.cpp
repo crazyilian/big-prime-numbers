@@ -10,7 +10,7 @@ namespace BigPrimeLib {
 // search_next_prime
 
 TEST(search_next_prime, small_primes) {
-    MillerRabinPrimeTester mrt(20, Random());
+    PrimeTester mrt = MillerRabinPrimeTester(20, Random());
     auto small_primes = read_numbers(Filenames::SmallPrimes);
     small_primes.resize(std::min(small_primes.size(), 1000ul));
     BigInt x = -10;
@@ -42,7 +42,7 @@ void validate_generate_prime_in_range(const BigInt &l, const BigInt &r, Random<>
 TEST(generate_random_prime_in_range, no_primes_range) {
     Random rnd;
     auto small_primes = read_numbers(Filenames::SmallPrimes);
-    MillerRabinPrimeTester mrt(20, rnd);
+    PrimeTester mrt = MillerRabinPrimeTester(20, rnd);
     for (size_t i = 1; i < small_primes.size(); ++i) {
         BigInt l = small_primes[i - 1] + 1;
         BigInt r = small_primes[i] - 1;
@@ -57,7 +57,7 @@ TEST(generate_random_prime_in_range, small_range) {
     Random rnd;
     auto small_primes = read_numbers(Filenames::SmallPrimes);
     small_primes.resize(std::min(small_primes.size(), 3000ul));
-    MillerRabinPrimeTester mrt(20, rnd);
+    PrimeTester mrt = MillerRabinPrimeTester(20, rnd);
     for (const BigInt &p : small_primes) {
         BigInt l = p - rnd.uniform(0, 100);
         BigInt r = p + rnd.uniform(0, 100);
@@ -68,7 +68,7 @@ TEST(generate_random_prime_in_range, small_range) {
 TEST(generate_random_prime_in_range, big_range) {
     Random rnd;
     BigInt C = Math::pow(BigInt(10), 300);
-    MillerRabinPrimeTester mrt(20, rnd);
+    PrimeTester mrt = MillerRabinPrimeTester(20, rnd);
     for (size_t i = 0; i < 10; ++i) {
         BigInt l = rnd.uniform(0, C);
         BigInt r = rnd.uniform(2 * l, 4 * C);
@@ -89,7 +89,7 @@ void validate_generate_prime_maurer(size_t bit_size, Random<> &rnd, PrimeTester 
 
 TEST(generate_random_prime_maurer, small_bit_size) {
     Random rnd;
-    MillerRabinPrimeTester mrt(20, rnd);
+    PrimeTester mrt = MillerRabinPrimeTester(20, rnd);
     for (size_t bit_size = 2; bit_size < 300; ++bit_size) {
         validate_generate_prime_maurer(bit_size, rnd, mrt);
     }
@@ -97,7 +97,7 @@ TEST(generate_random_prime_maurer, small_bit_size) {
 
 TEST(generate_random_prime_maurer, big_bit_size) {
     Random rnd;
-    MillerRabinPrimeTester mrt(20, rnd);
+    PrimeTester mrt = MillerRabinPrimeTester(20, rnd);
     for (size_t bit_size = 300; bit_size <= 1000; bit_size += 100) {
         validate_generate_prime_maurer(bit_size, rnd, mrt);
     }
@@ -122,7 +122,7 @@ void validate_generate_prime_maurer_with_cert(size_t bit_size, Random<> &rnd, Pr
 
 TEST(generate_prime_maurer_with_cert, small_bit_size) {
     Random rnd;
-    MillerRabinPrimeTester mrt(20, rnd);
+    PrimeTester mrt = MillerRabinPrimeTester(20, rnd);
     for (size_t bit_size = 2; bit_size < 300; ++bit_size) {
         validate_generate_prime_maurer_with_cert(bit_size, rnd, mrt);
     }
@@ -130,7 +130,7 @@ TEST(generate_prime_maurer_with_cert, small_bit_size) {
 
 TEST(generate_prime_maurer_with_cert, big_bit_size) {
     Random rnd;
-    MillerRabinPrimeTester mrt(20, rnd);
+    PrimeTester mrt = MillerRabinPrimeTester(20, rnd);
     for (size_t bit_size = 300; bit_size <= 1000; bit_size += 100) {
         validate_generate_prime_maurer_with_cert(bit_size, rnd, mrt);
     }

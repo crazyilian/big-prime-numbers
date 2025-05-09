@@ -6,6 +6,7 @@
 
 using BigPrimeLib::BigInt;
 using BigPrimeLib::PrimalityStatus;
+using BigPrimeLib::PrimeTester;
 using BigPrimeLib::MillerRabinPrimeTester;
 using BigPrimeLib::Random;
 namespace Math = BigPrimeLib::Math;
@@ -13,7 +14,7 @@ namespace Except = BigPrimeLib::Except;
 
 int main() {
     try {
-        MillerRabinPrimeTester prime_tester(20, Random());
+        PrimeTester prime_tester = MillerRabinPrimeTester(20, Random());
         BigInt x = Math::pow(BigInt(10), 100) + 267;
         if (prime_tester.test(x) == PrimalityStatus::Composite) {
             std::cout << "Composite";

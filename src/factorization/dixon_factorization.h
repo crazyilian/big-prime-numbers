@@ -2,21 +2,17 @@
 
 #include <boost/dynamic_bitset.hpp>
 #include "common.h"
-#include "factorization_utils.h"
 #include "sieve_eratosthenes.h"
+#include "factorization_utils.hpp"
 
 namespace BigPrimeLib {
 
-
-class DixonFactorizer : public Factorizer {
-public:
-    SieveEratosthenes sieve;
-
+class DixonFactorizer {
 public:
     explicit DixonFactorizer(size_t b_lim);
     DixonFactorizer(const PrimeTester &prime_tester, size_t b_lim);
-
-    std::unique_ptr<Factorizer> clone() const override;
+    PrimalityStatus prime_test(const BigInt &n);
+    std::optional<BigInt> find_factor(const BigInt &n);
 
 private:
     struct Rels {
@@ -27,8 +23,9 @@ private:
     std::optional<std::vector<size_t>> factor_over_base(BigInt x);
     std::vector<boost::dynamic_bitset<>> nullspace_mod2(std::vector<boost::dynamic_bitset<>> mat);
 
-public:
-    std::optional<BigInt> find_factor(const BigInt &n) override;
+private:
+    std::optional<PrimeTester> prime_tester_;
+    SieveEratosthenes sieve_;
 };
 
 }

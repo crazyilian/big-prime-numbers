@@ -4,17 +4,17 @@
 
 namespace BigPrimeLib {
 
-LucasLehmerRieselPrimeTester::LucasLehmerRieselPrimeTester() : PrimeTester(PrimalityStatus::Uncertain) {}
+LucasLehmerRieselPrimeTester::LucasLehmerRieselPrimeTester() {}
+
+const PrimalityStatus &LucasLehmerRieselPrimeTester::on_uncertain() const {
+    return on_uncertain_;
+}
 
 PrimalityStatus LucasLehmerRieselPrimeTester::test_raw(const BigInt &n) {
     // n = k * 2^s - 1, k<2^s
-    assert(n > 0);
     uint64_t s = Math::lsb(n + 1);
     assert(Math::msb(n + 1) < s * 2);
     BigInt k = (n + 1) >> s;
-    if (auto status = test_leq_3(n); status != PrimalityStatus::Uncertain) {
-        return status;
-    }
 
     uint64_t p = 4;
     if (k % 3 == 0) {
@@ -30,10 +30,6 @@ PrimalityStatus LucasLehmerRieselPrimeTester::test_raw(const BigInt &n) {
     } else {
         return PrimalityStatus::Composite;
     }
-}
-
-std::unique_ptr<PrimeTester> LucasLehmerRieselPrimeTester::clone() const {
-    return std::make_unique<LucasLehmerRieselPrimeTester>(*this);
 }
 
 }
