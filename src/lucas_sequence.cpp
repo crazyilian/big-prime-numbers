@@ -51,20 +51,22 @@ LucasSequence::LucasSequence(const BigInt &k, const BigInt &p, const BigInt &q,
     } while (i > 0);
 }
 
-void LucasSequence::add1() {
+LucasSequence &LucasSequence::add1() {
     BigInt u_new = ((p_ * u_ + v_) % mod_ * inv2_) % mod_;
     BigInt v_new = ((d_ * u_ + p_ * v_) % mod_ * inv2_) % mod_;
     u_ = std::move(u_new);
     v_ = std::move(v_new);
     qpow_ = qpow_ * q_ % mod_;
-    k_++;
+    ++k_;
+    return *this;
 }
 
-void LucasSequence::mul2() {
+LucasSequence &LucasSequence::mul2() {
     u_ = u_ * v_ % mod_;
     v_ = modpos(v_ * v_ - (2 * qpow_), mod_);
     qpow_ = qpow_ * qpow_ % mod_;
     k_ *= 2;
+    return *this;
 }
 
 const BigInt &LucasSequence::u() const { return u_; }

@@ -9,8 +9,8 @@ public:
     LucasSequence(const BigInt &p, const BigInt &q, const BigInt &mod);
     LucasSequence(const BigInt &k, const BigInt &p, const BigInt &q, const BigInt &mod);
 
-    void add1();
-    void mul2();
+    LucasSequence &add1();
+    LucasSequence &mul2();
 
     const BigInt &u() const;
     const BigInt &v() const;
