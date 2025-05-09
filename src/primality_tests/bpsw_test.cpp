@@ -9,6 +9,15 @@ namespace BigPrimeLib {
 
 const std::vector<BigInt> kWieferichPrimes = {1093, 3511}; // OEIS: A001220
 
+
+detail::BPSWPrimeTester::BPSWPrimeTester(bool known_wieferich, bool stronger_lucas, bool assume_prime)
+    : on_uncertain_(assume_prime ? PrimalityStatus::Prime : PrimalityStatus::Uncertain),
+      known_wieferich_(known_wieferich), stronger_lucas_(stronger_lucas) {}
+
+const PrimalityStatus &detail::BPSWPrimeTester::on_uncertain() const {
+    return on_uncertain_;
+}
+
 PrimalityStatus detail::BPSWPrimeTester::lucas_test_raw(const BigInt &n) const {
     if (known_wieferich_) {
         for (const auto &w : kWieferichPrimes) {
@@ -49,14 +58,6 @@ PrimalityStatus detail::BPSWPrimeTester::lucas_test_raw(const BigInt &n) const {
     } else {
         return stronger_lucas_test(n, p, q, -1);
     }
-}
-
-detail::BPSWPrimeTester::BPSWPrimeTester(bool known_wieferich, bool stronger_lucas, bool assume_prime)
-    : on_uncertain_(assume_prime ? PrimalityStatus::Prime : PrimalityStatus::Uncertain),
-      known_wieferich_(known_wieferich), stronger_lucas_(stronger_lucas) {}
-
-const PrimalityStatus &detail::BPSWPrimeTester::on_uncertain() const {
-    return on_uncertain_;
 }
 
 PrimalityStatus BPSWMillerPrimeTester::test_raw(const BigInt &n) {

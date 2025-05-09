@@ -11,80 +11,6 @@ PrimalityStatus DixonFactorizer::primality_test(const BigInt &n) {
     return prime_tester_ ? prime_tester_->test(n) : PrimalityStatus::Uncertain;
 }
 
-std::optional<std::vector<size_t>> DixonFactorizer::factor_over_base(BigInt x) {
-    std::vector<size_t> exps(sieve_.primes.size());
-    for (size_t i = 0; i < sieve_.primes.size(); ++i) {
-        while (x % sieve_.primes[i] == 0) {
-            x /= sieve_.primes[i];
-            exps[i]++;
-        }
-    }
-    if (x != 1) {
-        return std::nullopt;
-    }
-    return exps;
-}
-
-std::vector<boost::dynamic_bitset<>> DixonFactorizer::nullspace_mod2(std::vector<boost::dynamic_bitset<>> mat) {
-    size_t rows = mat.size();
-    size_t cols = mat[0].size();
-
-    std::vector<size_t> pivot(rows, cols);
-    size_t cur_r = 0;
-    for (size_t c = 0; c < cols; ++c) {
-        for (size_t r = cur_r; r < rows; ++r) {
-            if (mat[r][c]) {
-                std::swap(mat[cur_r], mat[r]);
-                break;
-            }
-        }
-        if (!mat[cur_r][c]) {
-            continue;
-        }
-
-        pivot[cur_r] = c;
-        for (size_t i = 0; i < rows; ++i) {
-            if (i != cur_r && mat[i][c]) {
-                mat[i] ^= mat[cur_r];
-            }
-        }
-        ++cur_r;
-        if (cur_r == rows) {
-            break;
-        }
-    }
-
-    std::vector<size_t> free_cols;
-    free_cols.reserve(cols);
-    for (size_t r = 0; r + 1 < rows; ++r) {
-        for (size_t c = pivot[r] + 1; c < pivot[r + 1]; ++c) {
-            free_cols.push_back(c);
-        }
-    }
-
-    std::vector<boost::dynamic_bitset<>> basis;
-    basis.reserve(free_cols.size());
-    for (size_t fc : free_cols) {
-        boost::dynamic_bitset<> v(cols);
-        v[fc] = true;
-
-        size_t i = rows;
-        do {
-            --i;
-            if (pivot[i] == cols) {
-                continue;
-            }
-            bool s = false;
-            for (size_t j = pivot[i] + 1; j < cols; ++j) {
-                s ^= (mat[i][j] & v[j]);
-            }
-            v[pivot[i]] = s;
-        } while (i > 0);
-        basis.push_back(v);
-    }
-    return basis;
-}
-
 std::optional<BigInt> DixonFactorizer::find_factor(const BigInt &n) {
     for (auto p : sieve_.primes) {
         if (n == p) {
@@ -159,6 +85,80 @@ std::optional<BigInt> DixonFactorizer::find_factor(const BigInt &n) {
         }
     }
     return std::nullopt;
+}
+
+std::optional<std::vector<size_t>> DixonFactorizer::factor_over_base(BigInt x) {
+    std::vector<size_t> exps(sieve_.primes.size());
+    for (size_t i = 0; i < sieve_.primes.size(); ++i) {
+        while (x % sieve_.primes[i] == 0) {
+            x /= sieve_.primes[i];
+            exps[i]++;
+        }
+    }
+    if (x != 1) {
+        return std::nullopt;
+    }
+    return exps;
+}
+
+std::vector<boost::dynamic_bitset<>> DixonFactorizer::nullspace_mod2(std::vector<boost::dynamic_bitset<>> mat) {
+    size_t rows = mat.size();
+    size_t cols = mat[0].size();
+
+    std::vector<size_t> pivot(rows, cols);
+    size_t cur_r = 0;
+    for (size_t c = 0; c < cols; ++c) {
+        for (size_t r = cur_r; r < rows; ++r) {
+            if (mat[r][c]) {
+                std::swap(mat[cur_r], mat[r]);
+                break;
+            }
+        }
+        if (!mat[cur_r][c]) {
+            continue;
+        }
+
+        pivot[cur_r] = c;
+        for (size_t i = 0; i < rows; ++i) {
+            if (i != cur_r && mat[i][c]) {
+                mat[i] ^= mat[cur_r];
+            }
+        }
+        ++cur_r;
+        if (cur_r == rows) {
+            break;
+        }
+    }
+
+    std::vector<size_t> free_cols;
+    free_cols.reserve(cols);
+    for (size_t r = 0; r + 1 < rows; ++r) {
+        for (size_t c = pivot[r] + 1; c < pivot[r + 1]; ++c) {
+            free_cols.push_back(c);
+        }
+    }
+
+    std::vector<boost::dynamic_bitset<>> basis;
+    basis.reserve(free_cols.size());
+    for (size_t fc : free_cols) {
+        boost::dynamic_bitset<> v(cols);
+        v[fc] = true;
+
+        size_t i = rows;
+        do {
+            --i;
+            if (pivot[i] == cols) {
+                continue;
+            }
+            bool s = false;
+            for (size_t j = pivot[i] + 1; j < cols; ++j) {
+                s ^= (mat[i][j] & v[j]);
+            }
+            v[pivot[i]] = s;
+        } while (i > 0);
+        basis.push_back(v);
+    }
+    return basis;
 }
 
 }

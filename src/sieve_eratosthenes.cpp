@@ -3,10 +3,12 @@
 namespace BigPrimeLib {
 
 namespace {
+
     size_t distribution_of_primes_lower_bound(size_t x) {
         double lb = static_cast<double>(x) / (std::log(x + 3) - 1.1) + 5;
         return static_cast<size_t>(lb);
     }
+
 }
 
 SieveEratosthenes::SieveEratosthenes(size_t n) : n(n), least_div(n + 1) {

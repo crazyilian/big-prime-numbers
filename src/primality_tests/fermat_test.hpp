@@ -36,11 +36,11 @@ public:
         : begin_(begin), end_(end),
           on_uncertain_(assume_prime ? PrimalityStatus::Prime : PrimalityStatus::Uncertain) {}
 
+    const PrimalityStatus &on_uncertain() const { return on_uncertain_; }
+
     PrimalityStatus test_raw(const BigInt &n) {
         return detail::fermat_test_iter(n, begin_, end_);
     }
-
-    const PrimalityStatus &on_uncertain() const { return on_uncertain_; }
 
 private:
     PrimalityStatus on_uncertain_;
@@ -54,12 +54,12 @@ public:
         : times_(times), rnd_(rnd),
           on_uncertain_(assume_prime ? PrimalityStatus::Prime : PrimalityStatus::Uncertain) {}
 
+    const PrimalityStatus &on_uncertain() const { return on_uncertain_; }
+
     PrimalityStatus test_raw(const BigInt &n) {
         std::function<BigInt()> f = [this, &n]() { return rnd_.uniform(2, n - 1); };
         return detail::fermat_test_iter(n, Iterator(f, 0), Iterator(f, times_));
     }
-
-    const PrimalityStatus &on_uncertain() const { return on_uncertain_; }
 
 private:
     using Iterator = boost::function_input_iterator<std::function<BigInt()>, size_t>;
