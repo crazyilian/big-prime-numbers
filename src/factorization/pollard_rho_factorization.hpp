@@ -9,13 +9,13 @@ namespace BigPrimeLib {
 template<class RandomGenerator>
 class PollardRhoFactorizer {
 public:
-    PollardRhoFactorizer(const Random<RandomGenerator> &rnd, std::optional<size_t> base_times,
+    PollardRhoFactorizer(const Random<RandomGenerator> &rnd, std::optional<size_t> restart_times,
                          std::optional<size_t> iter_times)
-        : rnd_(rnd), base_times_(base_times), iter_times_(iter_times) {}
+        : rnd_(rnd), restart_times_(restart_times), iter_times_(iter_times) {}
 
     PollardRhoFactorizer(const PrimeTester &prime_tester, const Random<RandomGenerator> &rnd,
-                         std::optional<size_t> base_times, std::optional<size_t> iter_times)
-        : prime_tester_(prime_tester), rnd_(rnd), base_times_(base_times), iter_times_(iter_times) {}
+                         std::optional<size_t> restart_times, std::optional<size_t> iter_times)
+        : prime_tester_(prime_tester), rnd_(rnd), restart_times_(restart_times), iter_times_(iter_times) {}
 
     PrimalityStatus primality_test(const BigInt &n) {
         return prime_tester_ ? prime_tester_->test(n) : PrimalityStatus::Uncertain;
@@ -25,7 +25,7 @@ public:
         if (n % 2 == 0) {
             return 2;
         }
-        for (size_t base_i = 0; !base_times_.has_value() || base_i < base_times_.value(); ++base_i) {
+        for (size_t base_i = 0; !restart_times_.has_value() || base_i < restart_times_.value(); ++base_i) {
             BigInt x = rnd_.uniform(0, n - 1);
             BigInt y = x;
             BigInt c;
@@ -50,7 +50,7 @@ public:
 private:
     std::optional<PrimeTester> prime_tester_;
     Random<RandomGenerator> rnd_;
-    std::optional<size_t> base_times_, iter_times_;
+    std::optional<size_t> restart_times_, iter_times_;
 };
 
 }
