@@ -2,7 +2,7 @@
 
 #include <boost/iterator/function_input_iterator.hpp>
 #include "common.h"
-#include "primality_utils.hpp"
+#include "primality_utils.h"
 #include "random.hpp"
 
 namespace BigPrimeLib {

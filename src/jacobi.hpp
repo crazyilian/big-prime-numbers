@@ -56,10 +56,10 @@ int jacobi(T1 a, const T2 &big_n) {
     T1 n;
     if (big_n > a) {
         detail::run_jacobi_iteration(a, big_n, res);
-        n = big_n % a;
+        n = static_cast<T1>(big_n % a);
         std::swap(n, a);
     } else {
-        n = big_n;
+        n = static_cast<T1>(big_n);
         a %= n;
     }
     return res * jacobi(a, n);

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "common.h"
-#include "factorization_utils.hpp"
+#include "factorization_utils.h"
 
 namespace BigPrimeLib {
 

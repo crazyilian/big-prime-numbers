@@ -1,26 +1,9 @@
 #pragma once
 
 #include <folly/Poly.h>
-#include "common.h"
+#include "primality_status.h"
 
 namespace BigPrimeLib {
-
-enum class PrimalityStatus {
-    Prime,
-    Composite,
-    Uncertain,
-    NotApplicable
-};
-
-inline const char *to_string(PrimalityStatus s) {
-    switch (s) {
-        case PrimalityStatus::Prime: return "Prime";
-        case PrimalityStatus::Composite: return "Composite";
-        case PrimalityStatus::Uncertain: return "Uncertain";
-        case PrimalityStatus::NotApplicable: return "NotApplicable";
-        default: return "[Unknown PrimalityStatus]";
-    }
-}
 
 namespace detail {
 
@@ -48,8 +31,5 @@ namespace detail {
     };
 
 }
-
-using PrimeTester = folly::Poly<detail::IPrimeTester>;
-using PrimeTesterRef = folly::Poly<detail::IPrimeTester &>;
 
 }

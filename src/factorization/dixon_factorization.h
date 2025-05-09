@@ -3,7 +3,7 @@
 #include <boost/dynamic_bitset.hpp>
 #include "common.h"
 #include "sieve_eratosthenes.h"
-#include "factorization_utils.hpp"
+#include "factorization_utils.h"
 
 namespace BigPrimeLib {
 

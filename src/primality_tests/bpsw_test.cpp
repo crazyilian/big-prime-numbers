@@ -1,4 +1,3 @@
-#include <set>
 #include "bpsw_test.h"
 #include "fermat_test.hpp"
 #include "miller_rabin_test.hpp"

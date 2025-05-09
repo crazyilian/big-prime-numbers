@@ -1,7 +1,7 @@
 #pragma once
 
 #include "common.h"
-#include "primality_tests/primality_utils.hpp"
+#include "primality_tests/primality_utils.h"
 
 namespace BigPrimeLib {
 
@@ -43,8 +43,5 @@ namespace detail {
     };
 
 }
-
-using Factorizer = folly::Poly<detail::IFactorizer>;
-using FactorizerRef = folly::Poly<detail::IFactorizer &>;
 
 }

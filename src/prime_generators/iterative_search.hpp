@@ -1,7 +1,7 @@
 #pragma once
 
 #include "common.h"
-#include "primality_tests/primality_utils.hpp"
+#include "primality_tests/primality_utils.h"
 #include "random.hpp"
 
 namespace BigPrimeLib {

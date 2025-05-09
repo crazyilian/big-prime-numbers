@@ -1,5 +1,4 @@
 #include "trial_factorization.h"
-#include "factorization_utils.hpp"
 
 namespace BigPrimeLib {
 
