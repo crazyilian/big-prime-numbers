@@ -8,6 +8,7 @@
 namespace BigPrimeLib {
 
 inline PrimalityStatus fermat_test_base(const BigInt &n, const BigInt &base) {
+    assert(n >= 3);
     if (Math::powm(base, n - 1, n) == 1) {
         return PrimalityStatus::Uncertain;
     } else {
@@ -39,6 +40,7 @@ public:
     const PrimalityStatus &on_uncertain() const { return on_uncertain_; }
 
     PrimalityStatus test_raw(const BigInt &n) {
+        assert(n >= 3);
         return detail::fermat_test_iter(n, begin_, end_);
     }
 
@@ -57,6 +59,7 @@ public:
     const PrimalityStatus &on_uncertain() const { return on_uncertain_; }
 
     PrimalityStatus test_raw(const BigInt &n) {
+        assert(n >= 3);
         std::function<BigInt()> f = [this, &n]() { return rnd_.uniform(2, n - 1); };
         return detail::fermat_test_iter(n, Iterator(f, 0), Iterator(f, times_));
     }

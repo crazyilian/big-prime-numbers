@@ -60,6 +60,7 @@ PrimalityStatus detail::BPSWPrimeTester::lucas_test_raw(const BigInt &n) const {
 }
 
 PrimalityStatus BPSWMillerPrimeTester::test_raw(const BigInt &n) {
+    assert(n >= 2);
     size_t s = Math::lsb(n - 1);
     BigInt t = n >> s;
     if (auto status = miller_rabin_test_base(n, s, t, 2); status != PrimalityStatus::Uncertain) {
@@ -69,6 +70,7 @@ PrimalityStatus BPSWMillerPrimeTester::test_raw(const BigInt &n) {
 }
 
 PrimalityStatus BPSWFermatPrimeTester::test_raw(const BigInt &n) {
+    assert(n >= 2);
     if (auto status = fermat_test_base(n, 2); status != PrimalityStatus::Uncertain) {
         return status;
     }

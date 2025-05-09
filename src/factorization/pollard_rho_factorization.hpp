@@ -22,7 +22,9 @@ public:
     }
 
     std::optional<BigInt> find_factor(const BigInt &n) {
-        if (n % 2 == 0) {
+        if (n <= 3) {
+            return std::nullopt;
+        } else if (n % 2 == 0) {
             return 2;
         }
         for (size_t base_i = 0; !restart_times_.has_value() || base_i < restart_times_.value(); ++base_i) {

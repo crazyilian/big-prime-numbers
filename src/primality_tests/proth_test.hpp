@@ -8,6 +8,7 @@
 namespace BigPrimeLib {
 
 inline PrimalityStatus proth_test_base(const BigInt &n, const BigInt &base) {
+    assert(n >= 3 && Math::msb(n - 1) < Math::lsb(n - 1) * 2);
     BigInt b = Math::powm(base, (n - 1) >> 1, n);
     if (b == n - 1) {
         return PrimalityStatus::Prime;
@@ -22,8 +23,6 @@ namespace detail {
 
     template<class Iterator>
     PrimalityStatus proth_test_iter(const BigInt &n, const Iterator &base_begin, const Iterator &base_end) {
-        // n = k * 2^s + 1, k<2^s
-        assert(Math::msb(n - 1) < Math::lsb(n - 1) * 2);
         for (auto it = base_begin; it != base_end; ++it) {
             BigInt base = *it;
             auto status = proth_test_base(n, base);
@@ -46,6 +45,7 @@ public:
     const PrimalityStatus &on_uncertain() const { return on_uncertain_; }
 
     PrimalityStatus test_raw(const BigInt &n) {
+        assert(n >= 3 && n % 2 == 1 && Math::msb(n - 1) < Math::lsb(n - 1) * 2);
         return detail::proth_test_iter(n, begin_, end_);
     }
 
@@ -64,6 +64,7 @@ public:
     const PrimalityStatus &on_uncertain() const { return on_uncertain_; }
 
     PrimalityStatus test_raw(const BigInt &n) {
+        assert(n >= 3 && n % 2 == 1 && Math::msb(n - 1) < Math::lsb(n - 1) * 2);
         std::function<BigInt()> f = [this, &n]() { return rnd_.uniform(2, n - 1); };
         return detail::proth_test_iter(n, Iterator(f, 0), Iterator(f, times_));
     }

@@ -12,6 +12,7 @@ const PrimalityStatus &LucasLehmerRieselPrimeTester::on_uncertain() const {
 
 PrimalityStatus LucasLehmerRieselPrimeTester::test_raw(const BigInt &n) {
     // n = k * 2^s - 1, k<2^s
+    assert(n > 0 && n % 2 == 1);
     uint64_t s = Math::lsb(n + 1);
     assert(Math::msb(n + 1) < s * 2);
     BigInt k = (n + 1) >> s;

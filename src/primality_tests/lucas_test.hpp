@@ -11,7 +11,7 @@ namespace BigPrimeLib {
 
 template<typename T>
 PrimalityStatus lucas_test(const BigInt &n, const T &p, const T &q, int jacob) {
-    assert(n > 0);
+    assert(n > 0 && jacob != 0 && jacob == jacobi(p * p - 4 * q, n));
     auto ls = LucasSequence(n - jacob, p, q, n);
     if (ls.u() % n == 0) {
         return PrimalityStatus::Uncertain;
@@ -21,6 +21,7 @@ PrimalityStatus lucas_test(const BigInt &n, const T &p, const T &q, int jacob) {
 
 template<typename T>
 PrimalityStatus lucas_test(const BigInt &n, const T &p, const T &q) {
+    assert(n > 0 && n % 2 == 1 && Math::gcd(p * p - 4 * q, n) != 1);
     T D = p * p - 4 * q;
     return lucas_test(n, p, q, jacobi(D, n));
 }
@@ -29,7 +30,7 @@ PrimalityStatus lucas_test(const BigInt &n, const T &p, const T &q) {
 
 template<typename T>
 PrimalityStatus strong_lucas_test(const BigInt &n, const BigInt &d, const size_t &s, const T &p, const T &q) {
-    assert(n > 0 && s > 0); // s=0 <=> (n-j) is odd <=> j is even <=> j=0 <=> gcd(n,D)!=1
+    assert(n > 0 && s > 0 && Math::gcd(n, q) == 1 && n - (d << s) == jacobi(p * p - 4 * q, n));
     if (n % 2 == 0) {
         return PrimalityStatus::Composite;
     }
@@ -48,6 +49,7 @@ PrimalityStatus strong_lucas_test(const BigInt &n, const BigInt &d, const size_t
 
 template<typename T>
 PrimalityStatus strong_lucas_test(const BigInt &n, const T &p, const T &q, int jacob) {
+    assert(n > 0 && jacob != 0 && jacob == jacobi(p * p - 4 * q, n));
     BigInt d = n - jacob;
     size_t s = Math::lsb(d);
     d >>= s;
@@ -56,6 +58,7 @@ PrimalityStatus strong_lucas_test(const BigInt &n, const T &p, const T &q, int j
 
 template<typename T>
 PrimalityStatus strong_lucas_test(const BigInt &n, const T &p, const T &q) {
+    assert(n > 0 && n % 2 == 1 && Math::gcd(p * p - 4 * q, n) != 1);
     T D = p * p - 4 * q;
     return strong_lucas_test(n, p, q, jacobi(D, n));
 }
@@ -65,7 +68,8 @@ PrimalityStatus strong_lucas_test(const BigInt &n, const T &p, const T &q) {
 template<typename T>
 PrimalityStatus stronger_lucas_test(const BigInt &n, const BigInt &d, const size_t &s, const T &p, const T &q,
                                     int jacob) {
-    assert(n > 0 && s > 0);
+    assert(n > 0 && s > 0 && Math::gcd(n, q) == 1 && jacob != 0 && jacob == jacobi(p * p - 4 * q, n)
+        && n - jacob == d << s);
     if (n % 2 == 0) {
         return PrimalityStatus::Composite;
     }
@@ -113,6 +117,7 @@ PrimalityStatus stronger_lucas_test(const BigInt &n, const BigInt &d, const size
 
 template<typename T>
 PrimalityStatus stronger_lucas_test(const BigInt &n, const T &p, const T &q, int jacob) {
+    assert(n > 0 && Math::gcd(n, q) == 1 && jacob != 0 && jacob == jacobi(p * p - 4 * q, n));
     BigInt d = n - jacob;
     size_t s = Math::lsb(d);
     d >>= s;
@@ -121,6 +126,7 @@ PrimalityStatus stronger_lucas_test(const BigInt &n, const T &p, const T &q, int
 
 template<typename T>
 PrimalityStatus stronger_lucas_test(const BigInt &n, const T &p, const T &q) {
+    assert(n > 0 && n % 2 == 1 && Math::gcd(p * p - 4 * q, n) != 1);
     T D = p * p - 4 * q;
     return stronger_lucas_test(n, p, q, jacobi(D, n));
 }

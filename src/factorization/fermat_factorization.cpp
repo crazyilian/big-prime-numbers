@@ -11,7 +11,9 @@ PrimalityStatus FermatFactorizer::primality_test(const BigInt &n) {
 }
 
 std::optional<BigInt> FermatFactorizer::find_factor(const BigInt &n) {
-    if (n % 2 == 0) {
+    if (n <= 3) {
+        return std::nullopt;
+    } else if (n % 2 == 0) {
         return 2;
     }
     BigInt a = Math::sqrt(n);

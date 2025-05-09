@@ -12,6 +12,11 @@ PrimalityStatus DixonFactorizer::primality_test(const BigInt &n) {
 }
 
 std::optional<BigInt> DixonFactorizer::find_factor(const BigInt &n) {
+    if (n <= 3) {
+        return std::nullopt;
+    } else if (n % 2 == 0) {
+        return 2;
+    }
     for (auto p : sieve_.primes) {
         if (n == p) {
             return std::nullopt;

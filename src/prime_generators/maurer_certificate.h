@@ -5,6 +5,8 @@
 
 namespace BigPrimeLib {
 
+bool verify_certificate_step(const BigInt &p, const BigInt &q, const BigInt &r, const BigInt &a);
+
 class MaurerPrime {
 public:
     struct CertificateStepInfo {

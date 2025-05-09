@@ -10,6 +10,7 @@ namespace BigPrimeLib {
 const std::vector<BigInt> kMillerRabinDeterministicBasesU64 = {2, 325, 9375, 28178, 450775, 9780504, 1795265022};
 
 inline PrimalityStatus miller_rabin_test_base(const BigInt &n, size_t s, const BigInt &t, const BigInt &base) {
+    assert(n >= 4 && s == Math::lsb(n - 1) && t == (n >> s));
     BigInt x = Math::powm(base, t, n);
     if (x == 1 || x == n - 1) {
         return PrimalityStatus::Uncertain;
@@ -52,6 +53,7 @@ public:
     const PrimalityStatus &on_uncertain() const { return on_uncertain_; }
 
     PrimalityStatus test_raw(const BigInt &n) {
+        assert(n >= 4);
         return detail::miller_rabin_test_iter(n, begin_, end_);
     }
 
@@ -70,6 +72,7 @@ public:
     const PrimalityStatus &on_uncertain() const { return on_uncertain_; }
 
     PrimalityStatus test_raw(const BigInt &n) {
+        assert(n >= 4);
         std::function<BigInt()> f = [this, &n]() { return rnd_.uniform(2, n - 2); };
         return detail::miller_rabin_test_iter(n, Iterator(f, 0), Iterator(f, times_));
     }

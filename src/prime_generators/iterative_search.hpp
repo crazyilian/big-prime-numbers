@@ -38,6 +38,7 @@ inline BigInt search_next_prime(const BigInt &l, PrimeTester &prime_tester) {
 template<class RandomGenerator>
 std::optional<BigInt> generate_prime_in_range(const BigInt &l, const BigInt &r, Random<RandomGenerator> &rnd,
                                               PrimeTester &prime_tester) {
+    assert(l <= r);
     BigInt s = rnd.uniform(l, r);
     return search_next_prime_in_range(s, l, r, prime_tester);
 }
