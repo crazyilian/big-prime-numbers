@@ -12,9 +12,9 @@
 
 namespace BigPrimeLib {
 
-void run_test(benchmark::State &state, PrimeTester &prime_tester, const BigInt &n) {
+void run_test(benchmark::State &state, PrimeTesterRef prime_tester, const BigInt &n) {
     for (auto _ : state) {
-        benchmark::DoNotOptimize(prime_tester.test(n));
+        benchmark::DoNotOptimize(prime_tester->test(n));
     }
 }
 
@@ -161,7 +161,7 @@ void register_benchmarks_proth_prime() {
 void register_benchmarks_proth_composite() {
     std::vector<BigInt> tests;
     Random rnd;
-    MillerRabinPrimeTester mrt(40, Random(), true);
+    PrimeTester mrt = MillerRabinPrimeTester(40, Random(), true);
     for (size_t i = 4; i <= 10; ++i) {
         size_t n = i * 1000 / 2;
         BigInt N;
@@ -258,7 +258,7 @@ void register_benchmarks_random_prime() {
 void register_benchmarks_random_composite() {
     std::vector<BigInt> tests;
     Random rnd;
-    MillerRabinPrimeTester mrt(40, Random(), true);
+    PrimeTester mrt = MillerRabinPrimeTester(40, Random(), true);
     for (size_t i = 4; i <= 10; ++i) {
         size_t n = i * 1000;
         BigInt N;
