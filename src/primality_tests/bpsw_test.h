@@ -5,11 +5,22 @@
 
 namespace BigPrimeLib {
 
+enum class BPSWFeatures {
+    None = 0,
+    KnownWieferich = 1,
+    StrongerLucas = 2
+};
+
+BPSWFeatures operator&(BPSWFeatures, BPSWFeatures);
+BPSWFeatures &operator&=(BPSWFeatures &, BPSWFeatures);
+BPSWFeatures operator|(BPSWFeatures, BPSWFeatures);
+BPSWFeatures &operator|=(BPSWFeatures &, BPSWFeatures);
+
 namespace detail {
 
     class BPSWPrimeTester {
     public:
-        explicit BPSWPrimeTester(bool known_wieferich = true, bool stronger_lucas = false, bool assume_prime = true);
+        explicit BPSWPrimeTester(BPSWFeatures features = BPSWFeatures::KnownWieferich, bool assume_prime = true);
         const PrimalityStatus &on_uncertain() const;
 
     protected:
@@ -17,7 +28,7 @@ namespace detail {
 
     private:
         PrimalityStatus on_uncertain_;
-        bool known_wieferich_, stronger_lucas_;
+        BPSWFeatures features_;
     };
 
 }

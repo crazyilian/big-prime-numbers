@@ -36,13 +36,13 @@ namespace {
             register_benchmark(data_name + "/lucas_lehmer_riesel/" + std::to_string(e), n,
                                LucasLehmerRieselPrimeTester());
             register_benchmark(data_name + "/bpsw_fermat/" + std::to_string(e), n,
-                               BPSWFermatPrimeTester(true, false, true));
+                               BPSWFermatPrimeTester(BPSWFeatures::KnownWieferich));
             register_benchmark(data_name + "/bpsw_fermat_stronger/" + std::to_string(e), n,
-                               BPSWFermatPrimeTester(true, true, true));
+                               BPSWFermatPrimeTester(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas));
             register_benchmark(data_name + "/bpsw_miller_rabin/" + std::to_string(e), n,
-                               BPSWMillerPrimeTester(true, false, true));
+                               BPSWMillerPrimeTester(BPSWFeatures::KnownWieferich));
             register_benchmark(data_name + "/bpsw_miller_rabin_stronger/" + std::to_string(e), n,
-                               BPSWMillerPrimeTester(true, true, true));
+                               BPSWMillerPrimeTester(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas));
             register_benchmark(data_name + "/miller_rabin_k10/" + std::to_string(e), n,
                                MillerRabinPrimeTester(10, Random(), true));
             register_benchmark(data_name + "/miller_rabin_k20/" + std::to_string(e), n,
@@ -64,13 +64,13 @@ namespace {
             register_benchmark(data_name + "/lucas_lehmer_riesel/" + std::to_string(e), n,
                                LucasLehmerRieselPrimeTester());
             register_benchmark(data_name + "/bpsw_fermat/" + std::to_string(e), n,
-                               BPSWFermatPrimeTester(true, false, true));
+                               BPSWFermatPrimeTester(BPSWFeatures::KnownWieferich));
             register_benchmark(data_name + "/bpsw_fermat_stronger/" + std::to_string(e), n,
-                               BPSWFermatPrimeTester(true, true, true));
+                               BPSWFermatPrimeTester(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas));
             register_benchmark(data_name + "/bpsw_miller_rabin/" + std::to_string(e), n,
-                               BPSWMillerPrimeTester(true, false, true));
+                               BPSWMillerPrimeTester(BPSWFeatures::KnownWieferich));
             register_benchmark(data_name + "/bpsw_miller_rabin_stronger/" + std::to_string(e), n,
-                               BPSWMillerPrimeTester(true, true, true));
+                               BPSWMillerPrimeTester(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas));
             register_benchmark(data_name + "/miller_rabin_k10/" + std::to_string(e), n,
                                MillerRabinPrimeTester(10, Random(), true));
             register_benchmark(data_name + "/miller_rabin_k20/" + std::to_string(e), n,
@@ -100,13 +100,13 @@ namespace {
             register_benchmark(data_name + "/lucas_lehmer_riesel/" + std::to_string(e), n,
                                LucasLehmerRieselPrimeTester());
             register_benchmark(data_name + "/bpsw_fermat/" + std::to_string(e), n,
-                               BPSWFermatPrimeTester(true, false, true));
+                               BPSWFermatPrimeTester(BPSWFeatures::KnownWieferich));
             register_benchmark(data_name + "/bpsw_fermat_stronger/" + std::to_string(e), n,
-                               BPSWFermatPrimeTester(true, true, true));
+                               BPSWFermatPrimeTester(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas));
             register_benchmark(data_name + "/bpsw_miller_rabin/" + std::to_string(e), n,
-                               BPSWMillerPrimeTester(true, false, true));
+                               BPSWMillerPrimeTester(BPSWFeatures::KnownWieferich));
             register_benchmark(data_name + "/bpsw_miller_rabin_stronger/" + std::to_string(e), n,
-                               BPSWMillerPrimeTester(true, true, true));
+                               BPSWMillerPrimeTester(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas));
             register_benchmark(data_name + "/miller_rabin_k10/" + std::to_string(e), n,
                                MillerRabinPrimeTester(10, Random(), true));
             register_benchmark(data_name + "/miller_rabin_k20/" + std::to_string(e), n,
@@ -138,13 +138,13 @@ namespace {
             register_benchmark(data_name + "/proth_k20/" + std::to_string(e), n,
                                ProthPrimeTester(20, Random(), true));
             register_benchmark(data_name + "/bpsw_fermat/" + std::to_string(e), n,
-                               BPSWFermatPrimeTester(true, false, true));
+                               BPSWFermatPrimeTester(BPSWFeatures::KnownWieferich));
             register_benchmark(data_name + "/bpsw_fermat_stronger/" + std::to_string(e), n,
-                               BPSWFermatPrimeTester(true, true, true));
+                               BPSWFermatPrimeTester(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas));
             register_benchmark(data_name + "/bpsw_miller_rabin/" + std::to_string(e), n,
-                               BPSWMillerPrimeTester(true, false, true));
+                               BPSWMillerPrimeTester(BPSWFeatures::KnownWieferich));
             register_benchmark(data_name + "/bpsw_miller_rabin_stronger/" + std::to_string(e), n,
-                               BPSWMillerPrimeTester(true, true, true));
+                               BPSWMillerPrimeTester(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas));
             register_benchmark(data_name + "/miller_rabin_k10/" + std::to_string(e), n,
                                MillerRabinPrimeTester(10, Random(), true));
             register_benchmark(data_name + "/miller_rabin_k20/" + std::to_string(e), n,
@@ -181,13 +181,13 @@ namespace {
             register_benchmark(data_name + "/proth_k20/" + std::to_string(e), n,
                                ProthPrimeTester(20, Random(), true));
             register_benchmark(data_name + "/bpsw_fermat/" + std::to_string(e), n,
-                               BPSWFermatPrimeTester(true, false, true));
+                               BPSWFermatPrimeTester(BPSWFeatures::KnownWieferich));
             register_benchmark(data_name + "/bpsw_fermat_stronger/" + std::to_string(e), n,
-                               BPSWFermatPrimeTester(true, true, true));
+                               BPSWFermatPrimeTester(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas));
             register_benchmark(data_name + "/bpsw_miller_rabin/" + std::to_string(e), n,
-                               BPSWMillerPrimeTester(true, false, true));
+                               BPSWMillerPrimeTester(BPSWFeatures::KnownWieferich));
             register_benchmark(data_name + "/bpsw_miller_rabin_stronger/" + std::to_string(e), n,
-                               BPSWMillerPrimeTester(true, true, true));
+                               BPSWMillerPrimeTester(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas));
             register_benchmark(data_name + "/miller_rabin_k10/" + std::to_string(e), n,
                                MillerRabinPrimeTester(10, Random(), true));
             register_benchmark(data_name + "/miller_rabin_k20/" + std::to_string(e), n,
@@ -211,13 +211,13 @@ namespace {
         for (const auto &n : tests) {
             size_t e = Math::msb(n);
             register_benchmark(data_name + "/bpsw_fermat/" + std::to_string(e), n,
-                               BPSWFermatPrimeTester(true, false, true));
+                               BPSWFermatPrimeTester(BPSWFeatures::KnownWieferich));
             register_benchmark(data_name + "/bpsw_fermat_stronger/" + std::to_string(e), n,
-                               BPSWFermatPrimeTester(true, true, true));
+                               BPSWFermatPrimeTester(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas));
             register_benchmark(data_name + "/bpsw_miller_rabin/" + std::to_string(e), n,
-                               BPSWMillerPrimeTester(true, false, true));
+                               BPSWMillerPrimeTester(BPSWFeatures::KnownWieferich));
             register_benchmark(data_name + "/bpsw_miller_rabin_stronger/" + std::to_string(e), n,
-                               BPSWMillerPrimeTester(true, true, true));
+                               BPSWMillerPrimeTester(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas));
             register_benchmark(data_name + "/miller_rabin_k10/" + std::to_string(e), n,
                                MillerRabinPrimeTester(10, Random(), true));
             register_benchmark(data_name + "/miller_rabin_k20/" + std::to_string(e), n,
@@ -235,13 +235,13 @@ namespace {
         for (const auto &n : tests) {
             size_t e = Math::msb(n);
             register_benchmark(data_name + "/bpsw_fermat/" + std::to_string(e), n,
-                               BPSWFermatPrimeTester(true, false, true));
+                               BPSWFermatPrimeTester(BPSWFeatures::KnownWieferich));
             register_benchmark(data_name + "/bpsw_fermat_stronger/" + std::to_string(e), n,
-                               BPSWFermatPrimeTester(true, true, true));
+                               BPSWFermatPrimeTester(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas));
             register_benchmark(data_name + "/bpsw_miller_rabin/" + std::to_string(e), n,
-                               BPSWMillerPrimeTester(true, false, true));
+                               BPSWMillerPrimeTester(BPSWFeatures::KnownWieferich));
             register_benchmark(data_name + "/bpsw_miller_rabin_stronger/" + std::to_string(e), n,
-                               BPSWMillerPrimeTester(true, true, true));
+                               BPSWMillerPrimeTester(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas));
             register_benchmark(data_name + "/miller_rabin_k10/" + std::to_string(e), n,
                                MillerRabinPrimeTester(10, Random(), true));
             register_benchmark(data_name + "/miller_rabin_k20/" + std::to_string(e), n,
@@ -273,13 +273,13 @@ namespace {
         for (const auto &n : tests) {
             size_t e = Math::msb(n);
             register_benchmark(data_name + "/bpsw_fermat/" + std::to_string(e), n,
-                               BPSWFermatPrimeTester(true, false, true));
+                               BPSWFermatPrimeTester(BPSWFeatures::KnownWieferich));
             register_benchmark(data_name + "/bpsw_fermat_stronger/" + std::to_string(e), n,
-                               BPSWFermatPrimeTester(true, true, true));
+                               BPSWFermatPrimeTester(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas));
             register_benchmark(data_name + "/bpsw_miller_rabin/" + std::to_string(e), n,
-                               BPSWMillerPrimeTester(true, false, true));
+                               BPSWMillerPrimeTester(BPSWFeatures::KnownWieferich));
             register_benchmark(data_name + "/bpsw_miller_rabin_stronger/" + std::to_string(e), n,
-                               BPSWMillerPrimeTester(true, true, true));
+                               BPSWMillerPrimeTester(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas));
             register_benchmark(data_name + "/miller_rabin_k10/" + std::to_string(e), n,
                                MillerRabinPrimeTester(10, Random(), true));
             register_benchmark(data_name + "/miller_rabin_k20/" + std::to_string(e), n,

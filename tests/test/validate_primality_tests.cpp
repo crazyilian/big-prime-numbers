@@ -224,22 +224,22 @@ namespace {
     // bpsw_miller_prime_test
 
     TEST(bpsw_miller_prime_test, small_primes) {
-        BPSWMillerPrimeTester t(true, false);
+        BPSWMillerPrimeTester t(BPSWFeatures::KnownWieferich);
         validate_on_small_primes({}, t);
     }
 
     TEST(bpsw_miller_prime_test, big_primes) {
-        BPSWMillerPrimeTester t(true, false);
+        BPSWMillerPrimeTester t(BPSWFeatures::KnownWieferich);
         validate_on_big_primes(t);
     }
 
     TEST(bpsw_miller_prime_test, big_product_two_primes) {
-        BPSWMillerPrimeTester t(true, false);
+        BPSWMillerPrimeTester t(BPSWFeatures::KnownWieferich);
         validate_on_big_product_two_primes(t);
     }
 
     TEST(bpsw_miller_prime_test, small_squares) {
-        PrimeTester t = BPSWMillerPrimeTester(true, false);
+        PrimeTester t = BPSWMillerPrimeTester(BPSWFeatures::KnownWieferich);
         for (BigInt x = 2; x < 300000; ++x) {
             auto status = t.test(x * x);
             EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << "^2 marked as " << to_string(
@@ -248,7 +248,7 @@ namespace {
     }
 
     TEST(bpsw_miller_prime_test, wieferich_combinations) {
-        PrimeTester t = BPSWMillerPrimeTester(true, false);
+        PrimeTester t = BPSWMillerPrimeTester(BPSWFeatures::KnownWieferich);
         BigInt w1 = 1093;
         BigInt w2 = 3511;
         for (size_t i = 0; i < 20; ++i) {
@@ -267,22 +267,22 @@ namespace {
     // bpsw_miller_prime_test_no_wieferich
 
     TEST(bpsw_miller_prime_test_no_wieferich, small_primes) {
-        BPSWMillerPrimeTester t(false, false);
+        BPSWMillerPrimeTester t(BPSWFeatures::None);
         validate_on_small_primes({}, t);
     }
 
     TEST(bpsw_miller_prime_test_no_wieferich, big_primes) {
-        BPSWMillerPrimeTester t(false, false);
+        BPSWMillerPrimeTester t(BPSWFeatures::None);
         validate_on_big_primes(t);
     }
 
     TEST(bpsw_miller_prime_test_no_wieferich, big_product_two_primes) {
-        BPSWMillerPrimeTester t(false, false);
+        BPSWMillerPrimeTester t(BPSWFeatures::None);
         validate_on_big_product_two_primes(t);
     }
 
     TEST(bpsw_miller_prime_test_no_wieferich, small_squares) {
-        PrimeTester t = BPSWMillerPrimeTester(false, false);
+        PrimeTester t = BPSWMillerPrimeTester(BPSWFeatures::None);
         for (BigInt x = 2; x < 300000; ++x) {
             auto status = t.test(x * x);
             EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << "^2 marked as " << to_string(
@@ -293,22 +293,22 @@ namespace {
     // bpsw_miller_prime_test_stronger_lucas
 
     TEST(bpsw_miller_prime_test_stronger_lucas, small_primes) {
-        BPSWMillerPrimeTester t(true, true);
+        BPSWMillerPrimeTester t(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas);
         validate_on_small_primes({}, t);
     }
 
     TEST(bpsw_miller_prime_test_stronger_lucas, big_primes) {
-        BPSWMillerPrimeTester t(true, true);
+        BPSWMillerPrimeTester t(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas);
         validate_on_big_primes(t);
     }
 
     TEST(bpsw_miller_prime_test_stronger_lucas, big_product_two_primes) {
-        BPSWMillerPrimeTester t(true, true);
+        BPSWMillerPrimeTester t(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas);
         validate_on_big_product_two_primes(t);
     }
 
     TEST(bpsw_miller_prime_test_stronger_lucas, small_squares) {
-        PrimeTester t = BPSWMillerPrimeTester(true, true);
+        PrimeTester t = BPSWMillerPrimeTester(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas);
         for (BigInt x = 2; x < 300000; ++x) {
             auto status = t.test(x * x);
             EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << "^2 marked as " << to_string(
@@ -319,22 +319,22 @@ namespace {
     // bpsw_fermat_prime_test
 
     TEST(bpsw_fermat_prime_test, small_primes) {
-        BPSWFermatPrimeTester t(true, false);
+        BPSWFermatPrimeTester t(BPSWFeatures::KnownWieferich);
         validate_on_small_primes({}, t);
     }
 
     TEST(bpsw_fermat_prime_test, big_primes) {
-        BPSWFermatPrimeTester t(true, false);
+        BPSWFermatPrimeTester t(BPSWFeatures::KnownWieferich);
         validate_on_big_primes(t);
     }
 
     TEST(bpsw_fermat_prime_test, big_product_two_primes) {
-        BPSWFermatPrimeTester t(true, false);
+        BPSWFermatPrimeTester t(BPSWFeatures::KnownWieferich);
         validate_on_big_product_two_primes(t);
     }
 
     TEST(bpsw_fermat_prime_test, small_squares) {
-        PrimeTester t = BPSWFermatPrimeTester(true, false);
+        PrimeTester t = BPSWFermatPrimeTester(BPSWFeatures::KnownWieferich);
         for (BigInt x = 2; x < 300000; ++x) {
             auto status = t.test(x * x);
             EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << "^2 marked as " << to_string(
@@ -343,7 +343,7 @@ namespace {
     }
 
     TEST(bpsw_fermat_prime_test, wieferich_combinations) {
-        PrimeTester t = BPSWFermatPrimeTester(true, false);
+        PrimeTester t = BPSWFermatPrimeTester(BPSWFeatures::KnownWieferich);
         BigInt w1 = 1093;
         BigInt w2 = 3511;
         for (size_t i = 0; i < 20; ++i) {
@@ -362,22 +362,22 @@ namespace {
     // bpsw_fermat_prime_test_no_wieferich
 
     TEST(bpsw_fermat_prime_test_no_wieferich, small_primes) {
-        BPSWFermatPrimeTester t(false, false);
+        BPSWFermatPrimeTester t(BPSWFeatures::None);
         validate_on_small_primes({}, t);
     }
 
     TEST(bpsw_fermat_prime_test_no_wieferich, big_primes) {
-        BPSWFermatPrimeTester t(false, false);
+        BPSWFermatPrimeTester t(BPSWFeatures::None);
         validate_on_big_primes(t);
     }
 
     TEST(bpsw_fermat_prime_test_no_wieferich, big_product_two_primes) {
-        BPSWFermatPrimeTester t(false, false);
+        BPSWFermatPrimeTester t(BPSWFeatures::None);
         validate_on_big_product_two_primes(t);
     }
 
     TEST(bpsw_fermat_prime_test_no_wieferich, small_squares) {
-        PrimeTester t = BPSWFermatPrimeTester(false, false);
+        PrimeTester t = BPSWFermatPrimeTester(BPSWFeatures::None);
         for (BigInt x = 2; x < 300000; ++x) {
             auto status = t.test(x * x);
             EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << "^2 marked as " << to_string(
@@ -388,22 +388,22 @@ namespace {
     // bpsw_fermat_prime_test_stronger_lucas
 
     TEST(bpsw_fermat_prime_test_stronger_lucas, small_primes) {
-        BPSWFermatPrimeTester t(true, true);
+        BPSWFermatPrimeTester t(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas);
         validate_on_small_primes({}, t);
     }
 
     TEST(bpsw_fermat_prime_test_stronger_lucas, big_primes) {
-        BPSWFermatPrimeTester t(true, true);
+        BPSWFermatPrimeTester t(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas);
         validate_on_big_primes(t);
     }
 
     TEST(bpsw_fermat_prime_test_stronger_lucas, big_product_two_primes) {
-        BPSWFermatPrimeTester t(true, true);
+        BPSWFermatPrimeTester t(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas);
         validate_on_big_product_two_primes(t);
     }
 
     TEST(bpsw_fermat_prime_test_stronger_lucas, small_squares) {
-        PrimeTester t = BPSWFermatPrimeTester(true, true);
+        PrimeTester t = BPSWFermatPrimeTester(BPSWFeatures::KnownWieferich | BPSWFeatures::StrongerLucas);
         for (BigInt x = 2; x < 300000; ++x) {
             auto status = t.test(x * x);
             EXPECT_TRUE(status == PrimalityStatus::Composite) << "Composite " << x << "^2 marked as " << to_string(

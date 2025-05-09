@@ -8,17 +8,28 @@ namespace BigPrimeLib {
 
 const std::vector<BigInt> kWieferichPrimes = {1093, 3511}; // OEIS: A001220
 
+BPSWFeatures operator&(BPSWFeatures a, BPSWFeatures b) {
+    return static_cast<BPSWFeatures>(static_cast<size_t>(a) & static_cast<size_t>(b));
+}
+BPSWFeatures &operator&=(BPSWFeatures &a, BPSWFeatures b) {
+    return a = a & b;
+}
+BPSWFeatures operator|(BPSWFeatures a, BPSWFeatures b) {
+    return static_cast<BPSWFeatures>(static_cast<size_t>(a) | static_cast<size_t>(b));
+}
+BPSWFeatures &operator|=(BPSWFeatures &a, BPSWFeatures b) {
+    return a = a | b;
+}
 
-detail::BPSWPrimeTester::BPSWPrimeTester(bool known_wieferich, bool stronger_lucas, bool assume_prime)
-    : on_uncertain_(assume_prime ? PrimalityStatus::Prime : PrimalityStatus::Uncertain),
-      known_wieferich_(known_wieferich), stronger_lucas_(stronger_lucas) {}
+detail::BPSWPrimeTester::BPSWPrimeTester(BPSWFeatures features, bool assume_prime)
+    : on_uncertain_(assume_prime ? PrimalityStatus::Prime : PrimalityStatus::Uncertain), features_(features) {}
 
 const PrimalityStatus &detail::BPSWPrimeTester::on_uncertain() const {
     return on_uncertain_;
 }
 
 PrimalityStatus detail::BPSWPrimeTester::lucas_test_raw(const BigInt &n) const {
-    if (known_wieferich_) {
+    if ((features_ & BPSWFeatures::KnownWieferich) != BPSWFeatures::None) {
         for (const auto &w : kWieferichPrimes) {
             if (n == w) {
                 return PrimalityStatus::Prime;
@@ -41,7 +52,8 @@ PrimalityStatus detail::BPSWPrimeTester::lucas_test_raw(const BigInt &n) const {
         } else {
             D = -D + 2;
         }
-        if (D == 17 && !known_wieferich_ && mpz_perfect_square_p(n.backend().data())) {
+        if (D == 17 && (features_ & BPSWFeatures::KnownWieferich) == BPSWFeatures::None
+            && mpz_perfect_square_p(n.backend().data())) {
             return PrimalityStatus::Composite;
         }
     }
@@ -52,7 +64,7 @@ PrimalityStatus detail::BPSWPrimeTester::lucas_test_raw(const BigInt &n) const {
         p = q = 5;
     }
 
-    if (!stronger_lucas_) {
+    if ((features_ & BPSWFeatures::StrongerLucas) == BPSWFeatures::None) {
         return strong_lucas_test(n, p, q, -1);
     } else {
         return stronger_lucas_test(n, p, q, -1);
