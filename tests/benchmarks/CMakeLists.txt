@@ -1,5 +1,8 @@
 enable_testing()
 
+find_package(Threads REQUIRED)
+find_package(benchmark REQUIRED)
+
 file(
         COPY
             ../data/
@@ -7,8 +10,6 @@ file(
             ${CMAKE_CURRENT_BINARY_DIR}/data
 )
 
-find_package(Threads REQUIRED)
-add_subdirectory(${CMAKE_SOURCE_DIR}/extern/benchmark benchmark-build)
 
 file(GLOB bench_targets *.cpp)
 add_executable(benchmarks ${bench_targets} ../test_utils.cpp)

@@ -11,8 +11,6 @@ find_package(folly REQUIRED)
 find_package(glog REQUIRED)
 find_package(Boost REQUIRED)
 
-add_subdirectory(extern/googletest)
-
 include_directories(src)
 file(GLOB src_targets src/**/*.cpp src/*.cpp)
 add_library(

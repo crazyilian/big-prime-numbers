@@ -1,6 +1,6 @@
 enable_testing()
 
-include(GoogleTest)
+find_package(GTest REQUIRED)
 
 file(
         COPY
