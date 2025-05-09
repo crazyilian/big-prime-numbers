@@ -107,17 +107,17 @@ namespace {
 
     void validate_generate_prime_maurer_with_cert(size_t bit_size, Random<> &rnd, PrimeTester &t) {
         auto y = generate_prime_maurer_with_cert(bit_size, rnd);
-        size_t y_bit_size = Math::msb(y.p);
-        EXPECT_TRUE(y_bit_size != bit_size) << y.p << " has " << y_bit_size << " bits, but " << bit_size
+        size_t y_bit_size = Math::msb(y.p());
+        EXPECT_TRUE(y_bit_size != bit_size) << y.p() << " has " << y_bit_size << " bits, but " << bit_size
                         << " bits required";
         EXPECT_TRUE(y.verify_assuming_prime_base()) << "Certificate is incorrect";
-        auto status = t.test(y.p);
-        EXPECT_TRUE(status == PrimalityStatus::Prime) << "Found " << to_string(status) << " number " << y.p;
+        auto status = t.test(y.p());
+        EXPECT_TRUE(status == PrimalityStatus::Prime) << "Found " << to_string(status) << " number " << y.p();
 
-        for (auto c = y.cert.get(); c != nullptr; c = c->q.cert.get()) {
-            auto status2 = t.test(c->q.p);
-            EXPECT_TRUE(status2 == PrimalityStatus::Prime) << "Found " << to_string(status2) << " number " << c->q.p
-                    << " in certificate";
+        for (const auto &cert_step : y.certificate()) {
+            auto status2 = t.test(cert_step.p);
+            EXPECT_TRUE(status2 == PrimalityStatus::Prime) << "Found " << to_string(status2) << " number "
+                    << cert_step.p << " in certificate";
         }
     }
 

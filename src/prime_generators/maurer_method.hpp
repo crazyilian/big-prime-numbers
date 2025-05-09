@@ -3,59 +3,9 @@
 #include "common.h"
 #include "iterative_search.hpp"
 #include "primality_tests/miller_rabin_test.hpp"
+#include "maurer_certificate.h"
 
 namespace BigPrimeLib {
-
-// certificate
-
-class MaurerPrimeCertificate;
-
-class MaurerPrime {
-public:
-    BigInt p;
-    std::unique_ptr<MaurerPrimeCertificate> cert;
-
-    explicit MaurerPrime(const BigInt &p);
-    MaurerPrime(const BigInt &p, const BigInt &r, const BigInt &a, MaurerPrime &q);
-
-    bool verify_assuming_prime_base() const;
-    BigInt get_cert_base() const;
-};
-
-
-class MaurerPrimeCertificate {
-public:
-    BigInt r, a;
-    MaurerPrime q;
-
-    MaurerPrimeCertificate(const BigInt &r, const BigInt &a, MaurerPrime &q) : r(r), a(a), q(std::move(q)) {}
-};
-
-inline MaurerPrime::MaurerPrime(const BigInt &p) : p(p) {}
-
-inline MaurerPrime::MaurerPrime(const BigInt &p, const BigInt &r, const BigInt &a, MaurerPrime &q)
-    : p(p), cert(std::make_unique<MaurerPrimeCertificate>(r, a, q)) {}
-
-inline bool MaurerPrime::verify_assuming_prime_base() const {
-    if (cert == nullptr) {
-        return true;
-    }
-    if (p != 2 * cert->r * cert->q.p + 1) {
-        return false;
-    }
-    auto b = Math::powm(cert->a, 2 * cert->r, p);
-    if (b == 1 || Math::powm(b, cert->q.p, p) != 1) {
-        return false;
-    }
-    return cert->q.verify_assuming_prime_base();
-}
-
-inline BigInt MaurerPrime::get_cert_base() const {
-    return cert == nullptr ? p : cert->q.get_cert_base();
-}
-
-
-// generation
 
 namespace detail {
 
@@ -105,8 +55,9 @@ MaurerPrime generate_prime_maurer_with_cert(size_t bit_size, Random<RandomGenera
     }
     size_t new_bit_size = detail::generate_prime_maurer_new_bitsize(bit_size, bit_margin, rnd);
     MaurerPrime q = generate_prime_maurer_with_cert(new_bit_size, rnd, bit_margin, iterative_bit_limit);
-    auto [p, r, a] = detail::generate_prime_maurer_find_p_r_a(bit_size, q.p, rnd);
-    return MaurerPrime(p, r, a, q);
+    auto [p, r, a] = detail::generate_prime_maurer_find_p_r_a(bit_size, q.p(), rnd);
+    q.extend_prime(p, r, a);
+    return q;
 }
 
 template<class RandomGenerator>
