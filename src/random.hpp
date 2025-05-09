@@ -14,11 +14,13 @@ class Random {
 
 public:
     Random(const Random &) = default;
+    Random(Random &) = default;
+    Random(Random &&) noexcept = default;
+    Random(const Random &&) noexcept = delete;
+    Random &operator=(const Random &) = default;
+    Random &operator=(Random &&) noexcept = default;
 
-    template<class SingleArg, class = std::enable_if_t<!std::is_same_v<Random, SingleArg>>>
-    explicit Random(const SingleArg &arg) : generator_(arg) {}
-
-    template<class... Args, class = std::enable_if_t<(sizeof...(Args) != 1)>>
+    template<class... Args>
     explicit Random(Args &&... args) : generator_(std::forward<Args>(args)...) {}
 
     BigInt uniform(BigInt a, BigInt b) {
