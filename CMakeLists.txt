@@ -14,7 +14,7 @@ find_package(Boost REQUIRED)
 add_subdirectory(extern/googletest)
 
 include_directories(src)
-file(GLOB src_targets src/**/*.cpp src/**/*.hpp src/*.cpp src/*.hpp)
+file(GLOB src_targets src/**/*.cpp src/*.cpp)
 add_library(
         big_prime_lib
         ${src_targets}
@@ -22,10 +22,12 @@ add_library(
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(big_prime_lib PRIVATE -Wall -Wextra -Wpedantic -Werror)
-    target_compile_options(big_prime_lib PRIVATE $<$<CONFIG:Debug>:-fsanitize=address,bounds,undefined>)
-    target_link_options(big_prime_lib PRIVATE $<$<CONFIG:Debug>:-fsanitize=address,bounds,undefined>)
-    target_link_libraries(big_prime_lib PRIVATE $<$<CONFIG:Debug>:-fsanitize=address,bounds,undefined>)
     target_compile_options(big_prime_lib PRIVATE $<$<CONFIG:Release>:-O3>)
+    if (UNIX)
+        target_compile_options(big_prime_lib PRIVATE $<$<CONFIG:Debug>:-fsanitize=address,bounds,undefined>)
+        target_link_options(big_prime_lib PRIVATE $<$<CONFIG:Debug>:-fsanitize=address,bounds,undefined>)
+        target_link_libraries(big_prime_lib PRIVATE $<$<CONFIG:Debug>:-fsanitize=address,bounds,undefined>)
+    endif (UNIX)
 elseif (MSVC)
     target_compile_options(big_prime_lib PRIVATE /W4)
 endif ()
