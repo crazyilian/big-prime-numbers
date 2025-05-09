@@ -5,16 +5,12 @@
 
 namespace BigPrimeLib {
 
-class SieveEratosthenes {
-public:
+struct SieveEratosthenes {
     size_t n;
     std::vector<size_t> primes;
     std::vector<size_t> least_div;
 
-public:
     explicit SieveEratosthenes(size_t n);
-
-    PrimalityStatus is_prime(size_t x) const;
 };
 
 }

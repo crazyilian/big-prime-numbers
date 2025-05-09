@@ -15,7 +15,6 @@ public:
     BigInt p;
     std::unique_ptr<MaurerPrimeCertificate> cert;
 
-public:
     explicit MaurerPrime(const BigInt &p);
     MaurerPrime(const BigInt &p, const BigInt &r, const BigInt &a, MaurerPrime &q);
 
@@ -29,7 +28,6 @@ public:
     BigInt r, a;
     MaurerPrime q;
 
-public:
     MaurerPrimeCertificate(const BigInt &r, const BigInt &a, MaurerPrime &q) : r(r), a(a), q(std::move(q)) {}
 };
 

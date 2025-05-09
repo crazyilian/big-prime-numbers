@@ -13,7 +13,7 @@ template<typename T>
 PrimalityStatus lucas_test(const BigInt &n, const T &p, const T &q, int jacob) {
     assert(n > 0);
     auto ls = LucasSequence(n - jacob, p, q, n);
-    if (ls.u % n == 0) {
+    if (ls.u() % n == 0) {
         return PrimalityStatus::Uncertain;
     }
     return PrimalityStatus::Composite;
@@ -34,12 +34,12 @@ PrimalityStatus strong_lucas_test(const BigInt &n, const BigInt &d, const size_t
         return PrimalityStatus::Composite;
     }
     auto ls = LucasSequence(d, p, q, n);
-    if (ls.u % n == 0 || ls.v % n == 0) {
+    if (ls.u() % n == 0 || ls.v() % n == 0) {
         return PrimalityStatus::Uncertain;
     }
     for (size_t r = 1; r < s; ++r) {
         ls.mul2();
-        if (ls.v % n == 0) {
+        if (ls.v() % n == 0) {
             return PrimalityStatus::Uncertain;
         }
     }
@@ -73,12 +73,12 @@ PrimalityStatus stronger_lucas_test(const BigInt &n, const BigInt &d, const size
     // strong Lucas test
     bool composite = true;
     auto ls = LucasSequence(d, p, q, n);
-    if (ls.u % n == 0 || ls.v % n == 0) {
+    if (ls.u() % n == 0 || ls.v() % n == 0) {
         composite = false;
     }
     for (size_t r = 1; r < s; ++r) {
         ls.mul2();
-        if (composite && ls.v % n == 0) {
+        if (composite && ls.v() % n == 0) {
             composite = false;
         }
     }
@@ -91,19 +91,19 @@ PrimalityStatus stronger_lucas_test(const BigInt &n, const BigInt &d, const size
     if (jacobqn == 0) {
         return PrimalityStatus::Composite;
     }
-    if (q != 1 && q != -1 && (ls.qpow - q * jacobqn + n) % n != 0) {
+    if (q != 1 && q != -1 && (ls.qpow() - q * jacobqn + n) % n != 0) {
         return PrimalityStatus::Composite;
     }
 
     ls.mul2();
     if (jacob == -1) {
         // V_{n+1} = 2Q (mod n)
-        if ((2 * q - ls.v + n) % n != 0) {
+        if ((2 * q - ls.v() + n) % n != 0) {
             return PrimalityStatus::Composite;
         }
     } else {
         // V_{n-1} = 2 (mod n)
-        if ((ls.v - 2 + n) % n) {
+        if ((ls.v() - 2 + n) % n) {
             return PrimalityStatus::Composite;
         }
     }

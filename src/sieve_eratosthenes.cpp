@@ -2,8 +2,15 @@
 
 namespace BigPrimeLib {
 
+namespace {
+    size_t distribution_of_primes_lower_bound(size_t x) {
+        double lb = static_cast<double>(x) / (std::log(x + 3) - 1.1) + 5;
+        return static_cast<size_t>(lb);
+    }
+}
+
 SieveEratosthenes::SieveEratosthenes(size_t n) : n(n), least_div(n + 1) {
-    primes.reserve(static_cast<size_t>(static_cast<double>(n) / (std::log(n + 3) - 1.1)) + 5); // >= pi(n)
+    primes.reserve(distribution_of_primes_lower_bound(n));
     for (size_t x = 2; x <= n; ++x) {
         if (least_div[x] == 0) {
             least_div[x] = x;
@@ -14,18 +21,5 @@ SieveEratosthenes::SieveEratosthenes(size_t n) : n(n), least_div(n + 1) {
         }
     }
 }
-
-PrimalityStatus SieveEratosthenes::is_prime(size_t x) const {
-    if (x <= 1) {
-        return PrimalityStatus::NotApplicable;
-    } else if (x > n) {
-        return PrimalityStatus::Uncertain;
-    } else if (least_div[x] == x) {
-        return PrimalityStatus::Prime;
-    } else {
-        return PrimalityStatus::Composite;
-    }
-}
-
 
 }

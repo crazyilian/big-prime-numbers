@@ -21,7 +21,7 @@ PrimalityStatus LucasLehmerRieselPrimeTester::test_raw(const BigInt &n) {
         for (p = 3; jacobi(p - 2, n) != 1 || jacobi(p + 2, n) != -1; ++p) {}
     }
 
-    auto v = LucasSequence(k, p, 1, n).v;
+    auto v = LucasSequence(k, p, 1, n).v();
     for (size_t i = 1; i + 1 < s; ++i) {
         v = (v * v - 2) % n;
     }
